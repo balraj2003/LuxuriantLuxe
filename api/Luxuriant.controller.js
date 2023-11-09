@@ -121,7 +121,7 @@ export default class LuxuriantController{
     }catch(e){
         res.status(500).json({error: e.message})
     }
-}
+    }
 
     static async apiAddProductsLuxuriant(req, res, next){
         try{
