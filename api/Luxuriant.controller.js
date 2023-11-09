@@ -1,6 +1,6 @@
 import LuxuriantDAO from "../dao/LuxuriantDAO.js";
 const dao = new LuxuriantDAO(); // Create a new instance of the LuxuriantDAO class
-
+const master_password = process.env.master_password;
 export default class LuxuriantController{
     static async apiGetLuxuriant(req, res, next){
         try{
@@ -48,7 +48,7 @@ export default class LuxuriantController{
         try{
 
             const pass = req.query.password;
-            if (pass === "119d22515f91b4be"){
+            if (pass === master_password){
                 const customers = await dao.getCustomers();
                 if (customers){
                     res.json(customers)
@@ -68,7 +68,7 @@ export default class LuxuriantController{
     static async apiGetProducts (req,res,next){
         try{
             const pass = req.query.password;
-            if (pass === "119d22515f91b4be"){
+            if (pass === master_password){
                 const products = await dao.getProducts();
                 if (products){
                     res.json(products)
@@ -88,7 +88,7 @@ export default class LuxuriantController{
     static async apiGetOrders(req,res,next){
         try{
             const pass = req.query.password;
-            if (pass === "119d22515f91b4be"){
+            if (pass === master_password){
                 const orders = await dao.getOrders();
                 if (orders){
                     res.json(orders)
@@ -110,7 +110,7 @@ export default class LuxuriantController{
             const order_id = req.query.order_id;
             const payment_status = req.query.payment_status;
 
-            if (pass === "119d22515f91b4be"){
+            if (pass === master_password){
                 const order = await dao.changePaymentStatus(order_id, payment_status);
                 if (order){
                     res.json(order)
