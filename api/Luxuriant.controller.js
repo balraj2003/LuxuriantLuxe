@@ -1,7 +1,7 @@
 import LuxuriantDAO from "../dao/LuxuriantDAO.js";
 const dao = new LuxuriantDAO(); // Create a new instance of the LuxuriantDAO class
-export default class LuxuriantController{
 
+export default class LuxuriantController{
     static async apiGetLuxuriant(req, res, next){
         try{
             res.json({message: "Hello World!"})
@@ -9,6 +9,7 @@ export default class LuxuriantController{
             res.status(500).json({error: e.message})
         }
     }
+
     static async apiAddOrdersLuxuriant(req, res, next){
         try{
             const customer_email = req.query.customer_email
@@ -18,6 +19,7 @@ export default class LuxuriantController{
             const customer_order = req.query.customer_order;
             const order_cost = req.query.order_cost;
             
+            console.log("customer_order: " + customer_order)
             const order = await dao.addOrder(
                 customer_email,
                 customer_phone,
@@ -26,35 +28,115 @@ export default class LuxuriantController{
                 customer_order,
                 order_cost
             );
-            if (order){
-                res.json(order.response)
-            }
+            if (order.message === "Success"){
+                res.json({
+                    order_id: order.order_id,
+                    order_cost: order.order_cost,
+                    payment_status: order.payment_status,
+                    message: order.message})
+                }
             else{
-                res.json({message: "failure"})
+                res.json({message: order.message})
+            }
+         
+        }catch(e){
+            res.status(500).json({error: e.message})
+        }
+    }
+
+    static async apiGetCustomers (req,res,next){
+        try{
+
+            const pass = req.query.password;
+            if (pass === "119d22515f91b4be"){
+                const customers = await dao.getCustomers();
+                if (customers){
+                    res.json(customers)
+                }else{
+                    res.json({message: "No customers found"})
+                }
+
+            }else{
+                res.json({message: "Incorrect password"})
+            }
+        }catch(e){
+            res.status(500).json({error: e.message})
+        }
+
+    }
+
+    static async apiGetProducts (req,res,next){
+        try{
+            const pass = req.query.password;
+            if (pass === "119d22515f91b4be"){
+                const products = await dao.getProducts();
+                if (products){
+                    res.json(products)
+                }else{
+                    res.json({message: "No products found"})
+                }
+
+            }else{
+                res.json({message: "Incorrect password"})
+            }
+        }catch(e){
+            res.status(500).json({error: e.message})
+        }
+
+    }
+
+    static async apiGetOrders(req,res,next){
+        try{
+            const pass = req.query.password;
+            if (pass === "119d22515f91b4be"){
+                const orders = await dao.getOrders();
+                if (orders){
+                    res.json(orders)
+                }else{
+                    res.json({message: "No orders found"})
+                }
+
+            }else{
+                res.json({message: "Incorrect password"})
             }
         }catch(e){
             res.status(500).json({error: e.message})
         }
     }
+
+    static async apiChangePaymentStatus(req,res,next){
+        try{
+            const pass = req.query.password;
+            const order_id = req.query.order_id;
+            const payment_status = req.query.payment_status;
+
+            if (pass === "119d22515f91b4be"){
+                const order = await dao.changePaymentStatus(order_id, payment_status);
+                if (order){
+                    res.json(order)
+                }else{
+                    res.json({message: "No orders found"})
+                }
+        }
+    }catch(e){
+        res.status(500).json({error: e.message})
+    }
+}
+
     static async apiAddProductsLuxuriant(req, res, next){
         try{
-            const product_name = req.query.product_name
-            const product_cost = req.query.product_cost
-
-            console.log("product_cost: " + product_cost)
-            const product = await dao.addProduct(product_name,product_cost);
+            const product = await dao.addProduct();
             if (product){
                 res.json({
                     product_id: product.product_id,
                     product_name: product.product_name,
                     product_cost: product.product_cost,
-                    message: "success"})
+                    message: "Product added successfully"})
             }else{
-                res.json({message: "failure"})
+                res.json({message: "Failure in adding product"})
             }
         }catch(e){
             res.status(500).json({error: e.message})
-            console.log(e.message)
         }
     }
 }
