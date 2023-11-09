@@ -5,7 +5,7 @@ import LuxuriantRoutes from "./api/Luxuriant.routes.js";
 const app = express();
 
 app.use(cors({
-    origin:'https://gleaming-flannel-shirt-fox.cyclic.app'
+    origin:'*'
 }));
 app.use(express.json());
 
