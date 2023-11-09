@@ -1,5 +1,6 @@
 import express from 'express';
 import LuxuriantRoutes from "./api/Luxuriant.routes.js";
+const app = express();
 import cors from "cors";
 const corsOrigin ={
     origin:'http://localhost:5173', //or whatever port your frontend is using
