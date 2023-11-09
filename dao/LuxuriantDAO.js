@@ -2,8 +2,10 @@ import { MongoClient, ObjectId } from "mongodb";
 
 export default class LuxuriantDAO {
   constructor() {
-    const mongo_username = process.env.mongo_username
-    const mongo_password = process.env.mongo_password
+    // const mongo_username = process.env.mongo_username
+    const mongo_username = "luxeluxuriant"
+    // const mongo_password = process.env.mongo_password
+    const mongo_password = "1Oy49l5Uomxpe5bP"
     this.uri = `mongodb+srv://${mongo_username}:${mongo_password}@cluster0.rjozjxo.mongodb.net/?retryWrites=true&w=majority`;
     this.client = new MongoClient(this.uri, { useNewUrlParser: true, useUnifiedTopology: true });
     this.client.connect();
