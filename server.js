@@ -1,5 +1,4 @@
 import express from 'express';
-import cors from "cors";
 import LuxuriantRoutes from "./api/Luxuriant.routes.js";
 import cors from "cors";
 const corsOrigin ={
