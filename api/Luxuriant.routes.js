@@ -9,6 +9,7 @@ router.route("/get_customers").post(LuxuriantCtrl.apiGetCustomers);
 router.route("/get_products").post(LuxuriantCtrl.apiGetProducts);
 router.route("/get_orders").post(LuxuriantCtrl.apiGetOrders);
 router.route("/change_payment_status").post(LuxuriantCtrl.apiChangePaymentStatus);
+router.route("/check_password").post(LuxuriantCtrl.apiCheckPassword);
 router.route("/add_product").get(LuxuriantCtrl.apiAddProductsLuxuriant);
 
 export default router;
