@@ -1,8 +1,8 @@
 import { json } from "express";
 import LuxuriantDAO from "../dao/LuxuriantDAO.js";
 const dao = new LuxuriantDAO(); // Create a new instance of the LuxuriantDAO class
-// const master_password = process.env.master_password;
-const master_password = "119d22515f91b4be";
+const master_password = process.env.master_password;
+// const master_password = "119d22515f91b4be";
 export default class LuxuriantController{
     static async apiGetLuxuriant(req, res, next){
         try{

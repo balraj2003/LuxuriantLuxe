@@ -8,7 +8,7 @@ const corsOrigin ={
     optionSuccessStatus:200
 }
 app.use(cors(corsOrigin));
-app.options('*',cors())
+// app.options('*',cors())
 app.use(express.json());
 
 app.use("/api/v1/Luxuriant", LuxuriantRoutes);
