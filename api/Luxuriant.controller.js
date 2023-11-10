@@ -50,7 +50,7 @@ export default class LuxuriantController {
       if (pass === master_password) {
         const customers = await dao.getCustomers();
         if (customers) {
-          res.json(customers);
+          res.json({customers: customers, message: "Success"});
         } else {
           res.json({ message: "No customers found" });
         }
@@ -86,7 +86,7 @@ export default class LuxuriantController {
       if (pass === master_password) {
         const orders = await dao.getOrders();
         if (orders) {
-          res.json(orders);
+          res.json({ orders: orders, message: "Success" });
         } else {
           res.json({ message: "No orders found" });
         }
@@ -111,7 +111,7 @@ export default class LuxuriantController {
         
         if (order) {
           sendMail(customer,order.order_details,product);
-          res.json(order);
+          res.json({order:order, message: "Success" });
         } else {
           res.json({ message: "No orders found" });
         }
