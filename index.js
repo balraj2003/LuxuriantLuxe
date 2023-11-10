@@ -12,9 +12,12 @@ const uri = `mongodb+srv://${mongo_username}:${mongo_password}@cluster0.rjozjxo.
 MongoClient.connect(uri).catch(err=>{
     console.error(err.stack)
     process.exit(1)
-})
-
-app.listen(process.env.PORT || 3000, ()=>{
-    console.log('Server is listening on port 3000')
-    console.log(process.env.master_password)
+}).catch(err=>{
+    console.error(err.stack)
+    process.exit(1)
+}).then(async client =>{
+    await LuxuriantDAO.InjectDB(client)
+    app.listen(process.env.PORT || 3000, ()=>{
+        console.log('Server is listening on port 3000')
+    })
 })
