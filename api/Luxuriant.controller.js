@@ -1,8 +1,8 @@
 import { sendMail } from "../send_mail.js";
 import LuxuriantDAO from "../dao/LuxuriantDAO.js";
 const dao = new LuxuriantDAO(); // Create a new instance of the LuxuriantDAO class
-// const master_password = process.env.master_password;
-const master_password = "119d22515f91b4be";
+const master_password = process.env.master_password;
+// const master_password = "119d22515f91b4be";
 export default class LuxuriantController {
   static async apiGetLuxuriant(req, res, next) {
     try {
@@ -46,7 +46,7 @@ export default class LuxuriantController {
 
   static async apiGetCustomers(req, res, next) {
     try {
-      const pass = req.query.password;
+      const pass = req.body.password;
       if (pass === master_password) {
         const customers = await dao.getCustomers();
         if (customers) {
