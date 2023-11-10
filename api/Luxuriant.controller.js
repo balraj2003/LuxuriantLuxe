@@ -64,7 +64,7 @@ export default class LuxuriantController {
 
   static async apiGetProducts(req, res, next) {
     try {
-      const pass = req.query.password;
+      const pass = req.body.password;
       if (pass === master_password) {
         const products = await dao.getProducts();
         if (products) {
@@ -82,7 +82,7 @@ export default class LuxuriantController {
 
   static async apiGetOrders(req, res, next) {
     try {
-      const pass = req.query.password;
+      const pass = req.body.password;
       if (pass === master_password) {
         const orders = await dao.getOrders();
         if (orders) {
