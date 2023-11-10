@@ -3,10 +3,10 @@ import LuxuriantDAO from './dao/LuxuriantDAO.js'
 import mongodb from 'mongodb'
 
 const MongoClient = mongodb.MongoClient
-const mongo_username = process.env.mongo_username 
-// const mongo_username = "luxeluxuriant"
-const mongo_password = process.env.mongo_password
-// const mongo_password = "1Oy49l5Uomxpe5bP"
+// const mongo_username = process.env.mongo_username 
+const mongo_username = "luxeluxuriant"
+// const mongo_password = process.env.mongo_password
+const mongo_password = "1Oy49l5Uomxpe5bP"
 const uri = `mongodb+srv://${mongo_username}:${mongo_password}@cluster0.rjozjxo.mongodb.net/?retryWrites=true&w=majority`
 
 MongoClient.connect(uri).catch(err=>{

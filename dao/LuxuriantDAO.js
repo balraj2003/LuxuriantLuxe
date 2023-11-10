@@ -47,11 +47,9 @@ export default class LuxuriantDAO {
       }))
     };
 
-    console.log("oder_date" + order.order_date)
-  
+    
     const orderResult = await cluster0.collection('orders').insertOne(order);
     
-    console.log("Order result " + orderResult)
     
     if (orderResult){
       return{
@@ -83,10 +81,16 @@ export default class LuxuriantDAO {
   }
 
   async changePaymentStatus(order_id, payment_status){
-    const result = await cluster0.collection('orders').updateOne({_id: new ObjectId(order_id)}, {$set: {payment_status: payment_status}});
-    console.log("Result " + result)
+    const result = await cluster0.collection('orders').findOneAndUpdate(
+      { _id: new ObjectId(order_id) },
+      { $set: { payment_status: payment_status } },
+      { returnOriginal: false }
+    );   
+    console.log("change payment status Result " + result)
     if (result){
       return{
+        order_details: result.order_details,
+        customer_id: result.customer_id,
         message:"Success"
       }
     }else{
@@ -94,6 +98,10 @@ export default class LuxuriantDAO {
         message:"Failure"
       }
     }
+  }
+  async getCustomerEmail(customer_id){
+    const result = await cluster0.collection('customers').findOne({ _id: new ObjectId(customer_id) });
+    return result;
   }
 
   async addProduct() {
