@@ -68,7 +68,7 @@ export default class LuxuriantController {
       if (pass === master_password) {
         const products = await dao.getProducts();
         if (products) {
-          res.json(products);
+          res.json({ products: products, message: "Success"});
         } else {
           res.json({ message: "No products found" });
         }
