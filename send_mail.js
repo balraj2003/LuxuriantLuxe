@@ -23,16 +23,29 @@ for (let item of order) {
 }
 
   let mailOptions = {
-    from: "parthzarekar4@outlook.com",
+    // from: process.env.mail_id,
+    from: process.env.mail_id,
     to: customer.customer_email,
     subject: "Order Confirmation",
     text: `Your order has been placed successfully. Here are your order details: \n${orderDetails}`,
   };
+  const MAX_RETRIES = 3;
 
-  try {
-    let info = await transporter.sendMail(mailOptions);
-    console.log("Message sent: %s", info.messageId);
-  } catch (error) {
-    console.error("Error occurred while sending email: %s", error);
+  for (let i = 0; i < MAX_RETRIES; i++) {
+    try {
+      let info = await transporter.sendMail(mailOptions);
+      console.log("Message sent: %s", info.messageId);
+      break; // If the email was sent successfully, break the loop
+    } catch (error) {
+      console.error("Error occurred while sending email: %s", error);
+      if (i === MAX_RETRIES - 1) { // If this was the last attempt
+        console.error("Failed to send email after %s attempts", MAX_RETRIES);
+      } else {
+        console.log("Retrying to send email...");
+      }
+    }
+  }
+  if(MAX_RETRIES > 0){
+    console.log("Email sent successfully");
   }
 }
