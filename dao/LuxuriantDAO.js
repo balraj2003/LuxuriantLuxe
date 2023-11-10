@@ -2,12 +2,12 @@ import { MongoClient, ObjectId } from "mongodb";
 
 export default class LuxuriantDAO {
   constructor() {
-    // const mongo_username = process.env.mongo_username
-    const mongo_username = "luxeluxuriant"
-    // const mongo_password = process.env.mongo_password
-    const mongo_password = "1Oy49l5Uomxpe5bP"
+    const mongo_username = process.env.mongo_username
+    // const mongo_username = "luxeluxuriant"
+    const mongo_password = process.env.mongo_password
+    // const mongo_password = "1Oy49l5Uomxpe5bP"
     this.uri = `mongodb+srv://${mongo_username}:${mongo_password}@cluster0.rjozjxo.mongodb.net/?retryWrites=true&w=majority`;
-    this.client = new MongoClient(this.uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    this.client = new MongoClient(this.uri);
     this.client.connect();
     this.db = this.client.db("cluster0"); 
   }
@@ -25,8 +25,7 @@ export default class LuxuriantDAO {
       const result = await this.db.collection('customers').insertOne({ customer_name, customer_address, customer_email, customer_phone });
       customer = { _id: result.insertedId };
       console.log("Customer result " + result)
-      // customer = result.ops[0];
-      // console.log("Customer result.ops " + customer)
+     
     }
     // parse the order
     customer_order = JSON.parse(customer_order);
