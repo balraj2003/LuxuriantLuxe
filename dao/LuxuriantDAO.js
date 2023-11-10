@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-
+import moment from 'moment-timezone';
 let cluster0;
 
 export default class LuxuriantDAO {
@@ -35,7 +35,8 @@ export default class LuxuriantDAO {
     customer_order = JSON.parse(customer_order);
 
     const order = {
-      order_date: new Date(),
+      order_date: moment().tz("Asia/Kolkata").format('DD/MM/YY'),
+      order_time: moment().tz("Asia/Kolkata").format('HH:mm:ss'),
       order_cost,
       payment_status: "pending",
       customer_id: customer._id,
@@ -45,6 +46,8 @@ export default class LuxuriantDAO {
         price: product.cost
       }))
     };
+
+    console.log("oder_date" + order.order_date)
   
     const orderResult = await cluster0.collection('orders').insertOne(order);
     
