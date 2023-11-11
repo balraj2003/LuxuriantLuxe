@@ -23,7 +23,6 @@ for (let item of order) {
 }
 
   let mailOptions = {
-    // from: process.env.mail_id,
     from: process.env.mail_id,
     to: customer.customer_email,
     subject: "Order Confirmation",
