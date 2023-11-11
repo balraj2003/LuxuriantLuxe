@@ -138,7 +138,7 @@ export default class LuxuriantController {
   static async apiChangePaymentStatus(req, res, next) {
     try {
       // Extract order details from the request query
-      const pass = req.query.password;
+      const pass = req.body.password;
       const order_id = req.query.order_id;
       const payment_status = req.query.payment_status;
 
