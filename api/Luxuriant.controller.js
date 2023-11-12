@@ -3,7 +3,7 @@ import { sendMail } from "../send_mail.js";
 import LuxuriantDAO from "../dao/LuxuriantDAO.js";
 const dao = new LuxuriantDAO(); // Create a new instance of the LuxuriantDAO class
 const master_password = process.env.master_password; // Get master password from environment variables
-// const master_password = "119d22515f91b4be"; // Get master password from environment variables
+
 // Define LuxuriantController class
 export default class LuxuriantController {
   // Method to get Luxuriant data
