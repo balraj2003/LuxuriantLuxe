@@ -7,15 +7,15 @@ const master_password = process.env.master_password; // Get master password from
 // Define LuxuriantController class
 export default class LuxuriantController {
   // Method to get Luxuriant data
-  static async apiGetLuxuriant(req, res, next) {
-    try {
-      // Send a JSON response with a message
-      res.json({ message: "Hello World!" });
-    } catch (e) {
-      // Send a 500 status code and the error message if an error occurs
-      res.status(500).json({ error: e.message });
-    }
-  }
+  // static async apiGetLuxuriant(req, res, next) {
+  //   try {
+  //     // Send a JSON response with a message
+  //     res.json({ message: "Hello World!" });
+  //   } catch (e) {
+  //     // Send a 500 status code and the error message if an error occurs
+  //     res.status(500).json({ error: e.message });
+  //   }
+  // }
 
   // Method to add orders
   static async apiAddOrdersLuxuriant(req, res, next) {

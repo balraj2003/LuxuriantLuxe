@@ -6,7 +6,7 @@ import LuxuriantCtrl from "./Luxuriant.controller.js";
 const router = express.Router();
 
 // Route for getting Luxuriant data
-router.route("/").get(LuxuriantCtrl.apiGetLuxuriant);
+// router.route("/").get(LuxuriantCtrl.apiGetLuxuriant);
 
 // Route for adding an order
 router.route("/add_order").post(LuxuriantCtrl.apiAddOrdersLuxuriant);
@@ -27,7 +27,7 @@ router.route("/change_payment_status").post(LuxuriantCtrl.apiChangePaymentStatus
 router.route("/check_password").post(LuxuriantCtrl.apiCheckPassword);
 
 // Route for adding a product
-router.route("/add_product").get(LuxuriantCtrl.apiAddProductsLuxuriant);
+// router.route("/add_product").get(LuxuriantCtrl.apiAddProductsLuxuriant);
 
 // Exporting the router as a module
 export default router;
