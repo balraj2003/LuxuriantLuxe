@@ -39,6 +39,7 @@ for (let item of order) {
       console.error("Error occurred while sending email: %s", error);
       if (i === MAX_RETRIES - 1) { // If this was the last attempt
         console.error("Failed to send email after %s attempts", MAX_RETRIES);
+        return(false)
       } else {
         console.log("Retrying to send email...");
       }
@@ -46,5 +47,6 @@ for (let item of order) {
   }
   if(MAX_RETRIES > 0){
     console.log("Email sent successfully");
+    return(true)
   }
 }
