@@ -153,8 +153,12 @@ export default class LuxuriantController {
         
         // If the order was found, send an email and a JSON response with the order details
         if (order) {
-          sendMail(customer,order.order_details,product);
-          res.json({order:order, message: "Success" });
+         const mail = await sendMail(customer,order.order_details,product);
+         if (mail){
+           res.json({order:order, message: "Success" });
+         }else{
+          res.json({message: "Failure"})
+         }
         } else {
           // Send a JSON response with an error message if no orders were found
           res.json({ message: "No orders found" });
