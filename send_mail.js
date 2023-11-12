@@ -3,8 +3,8 @@ import nodemailer from "nodemailer";
 export async function sendMail(customer, order, product) {
   let transporter = nodemailer.createTransport({
     host: "smtp-mail.outlook.com",
-    port: 465,
-    secure: true,
+    port: 587,
+    secure: false,
     auth: {
       user: process.env.mail_id,
       pass: process.env.mail_pass,  
