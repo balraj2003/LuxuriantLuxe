@@ -73,6 +73,7 @@ export default class LuxuriantDAO {
     // Parse the order
     customer_order = JSON.parse(customer_order);
 
+    console.log("customerId: " + customer._id);
     // Create the order object
     const order = {
       order_date: moment().tz("Asia/Kolkata").format("DD/MM/YY"),
@@ -156,21 +157,21 @@ export default class LuxuriantDAO {
   }
 
   // Method to add products
-  // async addProduct() {
-  //   // Define the products to be added
-  //   const products = [
-  //     { product_name: "Product 1", product_cost: 100 },
-  //     { product_name: "Product 2", product_cost: 200 },
-  //     { product_name: "Product 3", product_cost: 300 },
-  //     // Add more products as needed
-  //   ];
+  async addProduct() {
+    // Define the products to be added
+    const products = [
+      { product_name: "Product 1", product_cost: 100 },
+      { product_name: "Product 2", product_cost: 200 },
+      { product_name: "Product 3", product_cost: 300 },
+      // Add more products as needed
+    ];
 
-  //   // Add the products to the database
-  //   if (await cluster0.collection("products").insertMany(products)) {
-  //     console.log("Products added successfully");
-  //     return products;
-  //   } else {
-  //     console.log("Failure in adding products");
-  //   }
-  // }
+    // Add the products to the database
+    if (await cluster0.collection("products").insertMany(products)) {
+      console.log("Products added successfully");
+      return products;
+    } else {
+      console.log("Failure in adding products");
+    }
+  }
 }
