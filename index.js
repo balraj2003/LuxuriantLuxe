@@ -1,12 +1,10 @@
 import app from './server.js'
 import LuxuriantDAO from './dao/LuxuriantDAO.js'
 import mongodb from 'mongodb'
-
+import dotenv from 'dotenv'
+dotenv.config()
 const MongoClient = mongodb.MongoClient
-const mongo_username = process.env.mongo_username 
-const mongo_password = process.env.mongo_password
-
-const uri = `mongodb+srv://${mongo_username}:${mongo_password}@cluster0.rjozjxo.mongodb.net/?retryWrites=true&w=majority`
+const uri = process.env.Mongo_Uri 
 
 MongoClient.connect(uri).catch(err=>{
     console.error(err.stack)

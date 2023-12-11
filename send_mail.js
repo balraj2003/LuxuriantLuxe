@@ -1,4 +1,6 @@
 import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+dotenv.config();
 
 export async function sendMail(customer, order, product) {
   let transporter = nodemailer.createTransport({
@@ -6,8 +8,8 @@ export async function sendMail(customer, order, product) {
     port: 587,
     secure: false,
     auth: {
-      user: process.env.mail_id,
-      pass: process.env.mail_pass,  
+      user: process.env.Mail_Usr,
+      pass: process.env.Mail_Pass,  
     },
   });
 
@@ -23,7 +25,7 @@ for (let item of order) {
 }
 
   let mailOptions = {
-    from: process.env.mail_id,
+    from: "balrajriotavanandi@outlook.com",
     to: customer.customer_email,
     subject: "Order Confirmation",
     text: `Your order has been placed successfully. Here are your order details: \n${orderDetails}`,
