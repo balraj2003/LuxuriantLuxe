@@ -138,40 +138,34 @@ export default class LuxuriantController {
 
   // Method to change payment status
   static async apiChangePaymentStatus(req, res, next) {
-    try {
-      // Extract order details from the request query
-      const pass = req.body.password;
-      const order_id = req.query.order_id;
-      const payment_status = req.query.payment_status;
+      try {
+        const pass = req.body.password;
+        const order_id = req.query.order_id;
+        const payment_status = req.query.payment_status;
 
-      // Check if the provided password matches the master password
-      if (pass === master_password) {
-        // Change the payment status using the DAO
-        const order = await dao.changePaymentStatus(order_id, payment_status);
-        // Get the customer email using the DAO
-        const customer = await dao.getCustomerEmail(order.customer_id);
-        // Get the products using the DAO
-        const product = await dao.getProducts();
-        
-        // If the order was found, send an email and a JSON response with the order details
-        if (order) {
-         const mail = await sendMail(customer,order.order_details,product);
-         if (mail){
-           res.json({order:order, message: "Success" });
-         }else{
-          res.json({message: "Failure"})
-         }
+        if (pass === master_password) {
+          const order = await dao.changePaymentStatus(order_id, payment_status);
+          const customer = await dao.getCustomerEmail(order.customer_id);
+          const product = await dao.getProducts();
+
+          if (order) {
+           const mail = await sendMail(customer,order.order_details,product);
+           if (mail){
+             res.json({order:order, message: "Success" });
+           }else{
+            res.json({message: "Failure"})
+           }
+          } else {
+            res.json({ message: "No orders found" });
+          }
         } else {
-          // Send a JSON response with an error message if no orders were found
-          res.json({ message: "No orders found" });
+          res.status(401).json({ message: "Unauthorized" });
         }
+      } catch (e) {
+        console.error(e);
+        res.status(500).json({ message: "An error occurred" });
       }
-    } catch (e) {
-      // Send a 500 status code and the error message if an error occurs
-      res.status(500).json({ error: e.message });
     }
-  }
-
   // Method to check password
   static async apiCheckPassword(req, res) {
     try {
