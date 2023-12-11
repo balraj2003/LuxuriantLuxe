@@ -36,19 +36,15 @@ for (let item of order) {
     try {
       let info = await transporter.sendMail(mailOptions);
       console.log("Message sent: %s", info.messageId);
-      break; // If the email was sent successfully, break the loop
+      return true; // If the email was sent successfully, return true
     } catch (error) {
       console.error("Error occurred while sending email: %s", error);
       if (i === MAX_RETRIES - 1) { // If this was the last attempt
         console.error("Failed to send email after %s attempts", MAX_RETRIES);
-        return(false)
       } else {
         console.log("Retrying to send email...");
       }
     }
   }
-  if(MAX_RETRIES > 0){
-    console.log("Email sent successfully");
-    return(true)
-  }
+  return false; // If the email was not sent successfully, return false
 }
