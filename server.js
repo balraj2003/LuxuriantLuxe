@@ -3,7 +3,7 @@ import LuxuriantRoutes from "./api/Luxuriant.routes.js";
 const app = express();
 import cors from "cors";
 const corsOrigin ={
-    origin:true, //or whatever port your frontend is using           
+    origin:['https://lladmin.surge.sh/','https://luxuriantluxe.surge.sh/'], //or whatever port your frontend is using           
     optionSuccessStatus:200
 }
 app.use(cors(corsOrigin));
