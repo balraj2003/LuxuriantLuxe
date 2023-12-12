@@ -1,86 +1,48 @@
-import nodemailer from "nodemailer";
-import dotenv from "dotenv";
-dotenv.config();
+let ElasticEmail = require("@elasticemail/elasticemail-client");
 
-export async function sendMail(customer, order, product) {
-  console.log("customer: " + customer.customer_email);
-  console.log("order: " + order);
-  console.log("product: " + product);
-  console.log("process.env.Mail_Usr: " + process.env.Mail_Usr);
-  console.log("process.env.Mail_Pass: " + process.env.Mail_Pass);
-	let transporter = nodemailer.createTransport({
-		host: "smtp-mail.outlook.com",
-		port: 587,
-		secure: false,
-		auth: {
-			user: "balrajriotavanandi@outlook.com",
-			pass: "Petroleum@2025",
+async function sendMail() {
+	let defaultClient = ElasticEmail.ApiClient.instance;
+
+	let apikey = defaultClient.authentications["apikey"];
+	apikey.apiKey =
+		"E14DF5EE274AA52F3A0C88FF32C00B199ADDD6F90C1174F0B1CC993FEE536F5738A03D047FE0C4EF79BD54638B80861D";
+
+	let api = new ElasticEmail.EmailsApi();
+
+	let email = ElasticEmail.EmailMessageData.constructFromObject({
+		Recipients: [
+			new ElasticEmail.EmailRecipient(
+				"krishnaraj <kpt.krishnaraj@gmail.com>"
+			),
+		],
+		Content: {
+			Body: [
+				ElasticEmail.BodyPart.constructFromObject({
+					ContentType: "HTML",
+					Content: "My test email content ;)",
+				}),
+			],
+			Subject: "JS EE lib test",
+			From: "krishnaraj.kpt@outlook.com",
 		},
 	});
 
-	let orderDetails = "";
-
-	for (let item of order) {
-		let productItem = product.find((p) => {
-			return p._id.toString() === item.product_id.toString();
-		});
-		console.log("productItem: " + productItem);
-		let productName = productItem
-			? productItem.product_name
-			: "Product not found";
-		orderDetails += `Product name: ${productName}\nQuantity: ${item.quantity}\nPrice: ${item.price}\n\n`;
-	}
-
-	let mailOptions = {
-		from: "balrajriotavanandi@outlook.com",
-		to: customer.customer_email,
-		subject: "Order Confirmation",
-		text: `Your order has been placed successfully. Here are your order details: \n${orderDetails}`,
+  let sent = false;
+	var callback = function (error, data, response) {
+		if (error) {
+      console.error(error);
+      sent = false;
+		} else {
+			console.log(data);
+			console.log("API called successfully.");
+      sent = true;
+    }
 	};
-
-	let info = new Promise((resolve, reject) => {
-		transporter.sendMail(mailOptions, (error, info) => {
-			if (error) {
-				reject(error);
-			} else {
-				resolve(info);
-			}
-		});
-	});
-
-	return info
-		.then((data) => {
-			console.log("Mail sent successfully: " + data.response);
-			return true;
-		})
-		.catch((error) => {
-			console.log("Error: " + error);
-			return false;
-		});
+	await api.emailsPost(email, callback);
+  if (sent) {
+    return true;
+  }
+  return false;
 }
 
-// write test function to be run by node
-sendMail(
-	{
-		customer_email: "kpt.krishnaraj@gmail.com",
-	},
-	[
-		{
-			product_id: "5f8b7d2c1c9d440000f3e9b0",
-			quantity: 1,
-			price: 100,
-		},
-	],
-	[
-		{
-			_id: "5f8b7d2c1c9d440000f3e9b0",
-			product_name: "Product 1",
-		},
-	]
-)
-	.then((data) => {
-		console.log("Data: " + data);
-	})
-	.catch((error) => {
-		console.log("Error: " + error);
-	});
+export default sendMail;
