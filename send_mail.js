@@ -13,6 +13,7 @@ export default function sendMail(customer, order, product) {
 		},
 	});
 
+
 	let orderDetails = "";
 
 	for (let item of order) {
