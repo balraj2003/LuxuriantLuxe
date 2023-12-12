@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 dotenv.config();
 
-export async function sendMail(customer, order, product) {
+export default function sendMail(customer, order, product) {
 	let transporter = nodemailer.createTransport({
 		host: "smtp-mail.outlook.com",
 		port: 587,
