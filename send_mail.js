@@ -1,54 +1,58 @@
-import nodemailer from "nodemailer";
-import dotenv from "dotenv";
-dotenv.config();
+// let ElasticEmail = require("@elasticemail/elasticemail-client");
+import ElasticEmail from "@elasticemail/elasticemail-client";
 
-export default function sendMail(customer, order, product) {
-	let transporter = nodemailer.createTransport({
-		host: "smtp-mail.outlook.com",
-		port: 587,
-		secure: false,
-		auth: {
-			user: process.env.Mail_Usr,
-			pass: process.env.Mail_Pass,
+async function sendMail(customer, order, product) {
+	let defaultClient = ElasticEmail.ApiClient.instance;
+
+	let apikey = defaultClient.authentications["apikey"];
+	apikey.apiKey =
+		"E14DF5EE274AA52F3A0C88FF32C00B199ADDD6F90C1174F0B1CC993FEE536F5738A03D047FE0C4EF79BD54638B80861D";
+
+	let api = new ElasticEmail.EmailsApi();
+
+	let email = ElasticEmail.EmailMessageData.constructFromObject({
+		Recipients: [
+			new ElasticEmail.EmailRecipient(
+				customer.customer_email
+			),
+		],
+		Content: {
+			Body: [
+				ElasticEmail.BodyPart.constructFromObject({
+					ContentType: "HTML",
+					Content: "My test email content ;)",
+				}),
+			],
+			Subject: "JS EE lib test",
+			From: "krishnaraj.kpt@outlook.com",
 		},
 	});
 
 
-	let orderDetails = "";
-
-	for (let item of order) {
-		let productItem = product.find((p) => {
-			return p._id.toString() === item.product_id.toString();
-		});
-		console.log("productItem: " + productItem);
-		let productName = productItem
-			? productItem.product_name
-			: "Product not found";
-		orderDetails += `Product name: ${productName}\nQuantity: ${item.quantity}\nPrice: ${item.price}\n\n`;
-	}
-
-	let mailOptions = {
-		from: "balrajriotavanandi@outlook.com",
-		to: customer.customer_email,
-		subject: "Order Confirmation",
-		text: `Your order has been placed successfully. Here are your order details: \n${orderDetails}`,
+	let sent = false;
+	var callback = function (error, data, response) {
+		if (error) {
+			console.error(error);
+			sent = false;
+		} else {
+			console.log(data);
+			console.log("API called successfully.");
+			sent = true;
+		}
 	};
-
-	let info = new Promise((resolve, reject) => {
-		transporter.sendMail(mailOptions, (error, info) => {
-			if (error) {
-				reject(error);
-			} else {
-				resolve(info);
-			}
-		});
-	});
-
-	return info.then((data) => {
-    console.log("Mail sent successfully: " + data.response);
-    return true;
-	}).catch((error) => {
-    console.log("Error: " + error);
-    return false;
-	});
+	try {
+		let response = await api.emailsPost(email);
+		console.log(response);
+		console.log("API called successfully.");
+		return true;
+	  } catch (error) {
+		console.error(error);
+		return false;
+	  }
 }
+sendMail().then((result) => {
+	console.log("Email sent successfully.");
+  }).catch((error) => {
+	console.error("Failed to send email:", error);
+  });
+// export default sendMail;
