@@ -1,4 +1,5 @@
-let ElasticEmail = require("@elasticemail/elasticemail-client");
+// let ElasticEmail = require("@elasticemail/elasticemail-client");
+import ElasticEmail from "@elasticemail/elasticemail-client";
 
 async function sendMail(customer, order, product) {
 	let defaultClient = ElasticEmail.ApiClient.instance;
@@ -12,7 +13,7 @@ async function sendMail(customer, order, product) {
 	let email = ElasticEmail.EmailMessageData.constructFromObject({
 		Recipients: [
 			new ElasticEmail.EmailRecipient(
-				"krishnaraj <kpt.krishnaraj@gmail.com>"
+				customer.customer_email
 			),
 		],
 		Content: {
@@ -27,6 +28,7 @@ async function sendMail(customer, order, product) {
 		},
 	});
 
+
 	let sent = false;
 	var callback = function (error, data, response) {
 		if (error) {
@@ -38,11 +40,19 @@ async function sendMail(customer, order, product) {
 			sent = true;
 		}
 	};
-	await api.emailsPost(email, callback);
-	if (sent) {
+	try {
+		let response = await api.emailsPost(email);
+		console.log(response);
+		console.log("API called successfully.");
 		return true;
-	}
-	return false;
+	  } catch (error) {
+		console.error(error);
+		return false;
+	  }
 }
-
-export default sendMail;
+sendMail().then((result) => {
+	console.log("Email sent successfully.");
+  }).catch((error) => {
+	console.error("Failed to send email:", error);
+  });
+// export default sendMail;
