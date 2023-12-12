@@ -2,19 +2,14 @@ import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 dotenv.config();
 
-export async function sendMail(customer, order, product) {
-  console.log("customer: " + customer.customer_email);
-  console.log("order: " + order);
-  console.log("product: " + product);
-  console.log("process.env.Mail_Usr: " + process.env.Mail_Usr);
-  console.log("process.env.Mail_Pass: " + process.env.Mail_Pass);
+export default function sendMail(customer, order, product) {
 	let transporter = nodemailer.createTransport({
 		host: "smtp-mail.outlook.com",
 		port: 587,
 		secure: false,
 		auth: {
-			user: "balrajriotavanandi@outlook.com",
-			pass: "Petroleum@2025",
+			user: process.env.Mail_Usr,
+			pass: process.env.Mail_Pass,
 		},
 	});
 
@@ -48,39 +43,11 @@ export async function sendMail(customer, order, product) {
 		});
 	});
 
-	return info
-		.then((data) => {
-			console.log("Mail sent successfully: " + data.response);
-			return true;
-		})
-		.catch((error) => {
-			console.log("Error: " + error);
-			return false;
-		});
-}
-
-// write test function to be run by node
-sendMail(
-	{
-		customer_email: "kpt.krishnaraj@gmail.com",
-	},
-	[
-		{
-			product_id: "5f8b7d2c1c9d440000f3e9b0",
-			quantity: 1,
-			price: 100,
-		},
-	],
-	[
-		{
-			_id: "5f8b7d2c1c9d440000f3e9b0",
-			product_name: "Product 1",
-		},
-	]
-)
-	.then((data) => {
-		console.log("Data: " + data);
-	})
-	.catch((error) => {
-		console.log("Error: " + error);
+	return info.then((data) => {
+    console.log("Mail sent successfully: " + data.response);
+    return true;
+	}).catch((error) => {
+    console.log("Error: " + error);
+    return false;
 	});
+}
