@@ -28,31 +28,18 @@ async function sendMail(customer, order, product) {
 		},
 	});
 
-
-	let sent = false;
-	var callback = function (error, data, response) {
-		if (error) {
+	return new Promise((resolve, reject) => {
+		api.emailsPost(email, (error, response) => {
+		  if (error) {
 			console.error(error);
-			sent = false;
-		} else {
-			console.log(data);
+			reject(false);
+		  } else {
+			console.log(response);
 			console.log("API called successfully.");
-			sent = true;
-		}
-	};
-	try {
-		let response = await api.emailsPost(email);
-		console.log(response);
-		console.log("API called successfully.");
-		return true;
-	  } catch (error) {
-		console.error(error);
-		return false;
-	  }
+			resolve(true);
+		  }
+		});
+	  });
 }
-sendMail().then((result) => {
-	console.log("Email sent successfully.");
-  }).catch((error) => {
-	console.error("Failed to send email:", error);
-  });
+
 export default sendMail;
