@@ -1,5 +1,5 @@
 // Import necessary modules and initialize DAO
-import { sendMail } from "../send_mail.js";
+import sendMail  from "../send_mail.js";
 import LuxuriantDAO from "../dao/LuxuriantDAO.js";
 import dotenv from "dotenv";
 dotenv.config();
