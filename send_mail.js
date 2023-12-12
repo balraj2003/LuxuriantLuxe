@@ -55,4 +55,4 @@ sendMail().then((result) => {
   }).catch((error) => {
 	console.error("Failed to send email:", error);
   });
-// export default sendMail;
+export default sendMail;
