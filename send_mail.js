@@ -9,8 +9,8 @@ export async function sendMail(customer, order, product) {
 		port: 587,
 		secure: false, // Use SSL/TLS
 		auth: {
-			user: process.env.mail_id, // Sender's email ID
-			pass: process.env.mail_pass, // Sender's email password
+			user: process.env.Mail_Usr, // Sender's email ID
+			pass: process.env.Mail_Pass, // Sender's email password
 		},
 	});
 
@@ -33,7 +33,7 @@ export async function sendMail(customer, order, product) {
 
 	// Defining the email options
 	let mailOptions = {
-		from: process.env.mail_id, // Sender's email ID
+		from: process.env.Mail_Usr, // Sender's email ID
 		to: customer.customer_email, // Recipient's email ID
 		subject: "Order Confirmation", // Email subject
 		text: `Your order has been placed successfully. Here are your order details: \n${orderDetails}`, // Email body
