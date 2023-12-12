@@ -1,6 +1,6 @@
 let ElasticEmail = require("@elasticemail/elasticemail-client");
 
-async function sendMail() {
+async function sendMail(customer, order, product) {
 	let defaultClient = ElasticEmail.ApiClient.instance;
 
 	let apikey = defaultClient.authentications["apikey"];
@@ -27,22 +27,22 @@ async function sendMail() {
 		},
 	});
 
-  let sent = false;
+	let sent = false;
 	var callback = function (error, data, response) {
 		if (error) {
-      console.error(error);
-      sent = false;
+			console.error(error);
+			sent = false;
 		} else {
 			console.log(data);
 			console.log("API called successfully.");
-      sent = true;
-    }
+			sent = true;
+		}
 	};
 	await api.emailsPost(email, callback);
-  if (sent) {
-    return true;
-  }
-  return false;
+	if (sent) {
+		return true;
+	}
+	return false;
 }
 
 export default sendMail;
