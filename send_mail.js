@@ -27,7 +27,7 @@ export async function sendMail(customer, order, product) {
 	}
 
 	let mailOptions = {
-		from: process.env.Mail_Usr,
+		from: "balrajriotavanandi@outlook.com",
 		to: customer.customer_email,
 		subject: "Order Confirmation",
 		text: `Your order has been placed successfully. Here are your order details: \n${orderDetails}`,
