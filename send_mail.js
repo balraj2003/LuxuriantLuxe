@@ -33,7 +33,12 @@ async function sendMail(customer, order, product) {
 			Body: [
 				ElasticEmail.BodyPart.constructFromObject({
 					ContentType: "HTML",
-					Content: `Your order has been placed successfully. Here are your order details: \n${orderDetails}`,
+					Content: `<h1>Your order has been placed successfully.</h1>
+					<p>Here are your order details:</p>
+					<div style="margin-left: 20px;">
+					  ${orderDetails.replace(/<br>/g, '</div><div style="margin-left: 20px;">')}
+					</div>
+					<p>Thank you for your purchase!</p>`,
 				}),
 			],
 			Subject: "Order Details",
