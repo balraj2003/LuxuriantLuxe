@@ -1,14 +1,27 @@
 // let ElasticEmail = require("@elasticemail/elasticemail-client");
 import ElasticEmail from "@elasticemail/elasticemail-client";
+import dotenv from "dotenv";
+dotenv.config();
 
 async function sendMail(customer, order, product) {
 	let defaultClient = ElasticEmail.ApiClient.instance;
 
 	let apikey = defaultClient.authentications["apikey"];
-	apikey.apiKey =
-		"E14DF5EE274AA52F3A0C88FF32C00B199ADDD6F90C1174F0B1CC993FEE536F5738A03D047FE0C4EF79BD54638B80861D";
+	apikey.apiKey = process.env.API_KEY;
 
 	let api = new ElasticEmail.EmailsApi();
+
+	// Constructing the orderDetails string
+	let orderDetails = "";
+	for (let item of order) {
+	  let productItem = product.find(
+		(p) => p._id.toString() === item.product_id.toString()
+	  );
+	  let productName = productItem
+		? productItem.product_name
+		: "Product not found";
+	  orderDetails += `Product name: ${productName}<br>Quantity: ${item.quantity}<br>Price: ${item.price}<br><br>`;
+	}
 
 	let email = ElasticEmail.EmailMessageData.constructFromObject({
 		Recipients: [
@@ -20,10 +33,10 @@ async function sendMail(customer, order, product) {
 			Body: [
 				ElasticEmail.BodyPart.constructFromObject({
 					ContentType: "HTML",
-					Content: "My test email content ;)",
+					Content: `Your order has been placed successfully. Here are your order details: \n${orderDetails}`,
 				}),
 			],
-			Subject: "JS EE lib test",
+			Subject: "Order Details",
 			From: "krishnaraj.kpt@outlook.com",
 		},
 	});
