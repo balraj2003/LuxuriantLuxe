@@ -173,6 +173,29 @@ export default class LuxuriantController {
 			res.status(500).json({ message: "An error occurred" });
 		}
 	}
+
+	static async apiSendSubscriptionEmails(req, res, next) {
+		try {
+			const pass = req.body.password;
+			const customer_emails = req.body.customers;
+			const subject = req.body.subject;
+			const content = req.body.content;
+
+			if (pass === master_password) {
+				const mail = await sendMail(customer_emails, subject, content);
+				if (mail) {
+					res.json({ message: "Success" });
+				} else {
+					res.json({ message: "Failure" });
+				}
+			} else {
+				res.status(401).json({ message: "Unauthorized" });
+			}
+		} catch (e) {
+			console.error(e);
+			res.status(500).json({ message: "An error occurred" });
+		}
+	}
 	// Method to check password
 	static async apiCheckPassword(req, res) {
 		try {
