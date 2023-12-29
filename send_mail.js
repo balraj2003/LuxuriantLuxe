@@ -8,6 +8,10 @@ const privateKey = process.env.mailjet_private_key;
 const mailjet = Mailjet.connect(publicKey, privateKey);
 
 async function sendMail(customer, order, product) {
+	// log everything
+	console.log(customer);
+	console.log(order);
+	console.log(product);
 	// Constructing the orderDetails string
 	let starting_text = `
 		<h1>Thank you for shopping with us, ${customer.name}!</h1>
@@ -66,13 +70,19 @@ async function sendMail(customer, order, product) {
 		Subject: "Your Order has been placed!",
 		"Text-part": "Your Order Details are given below. ",
 		"Html-part": orderDetails,
-		Recipients: [{ Email: customer.email, Name: customer.name }],
+		Recipients: [
+			{ Email: customer.customer_email, Name: customer.customer_name },
+		],
 	});
 
 	const success = request
 		.then((result) => {
 			console.log(result.body);
-			return true;
+			if (result.body.Sent.length > 0) {
+				return true;
+			} else {
+				return false;
+			}
 		})
 		.catch((err) => {
 			console.log(err.statusCode);
@@ -83,6 +93,10 @@ async function sendMail(customer, order, product) {
 }
 
 async function sendSubscriptionMail(customer_details, subject, content) {
+	// log everything
+	console.log(customer_details);
+	console.log(subject);
+	console.log(content);
 	// customer details looks like this:
 	// [
 	// 	{
@@ -101,6 +115,10 @@ async function sendSubscriptionMail(customer_details, subject, content) {
 			Name: customer.name,
 		});
 	}
+	// // cap at just top 2 recipients
+	// recipients = recipients.slice(0, 2);
+	// // log
+	// console.log(recipients);
 
 	const request = mailjet.post("send").request({
 		FromEmail: process.env.Mail_Usr,
@@ -114,7 +132,10 @@ async function sendSubscriptionMail(customer_details, subject, content) {
 	const success = request
 		.then((result) => {
 			console.log(result.body);
-			return true;
+			if (result.body.Sent.length > 0) {
+				return true;
+			}
+			return false;
 		})
 		.catch((err) => {
 			console.log(err.statusCode);
@@ -160,20 +181,20 @@ export { sendMail, sendSubscriptionMail };
 // sendSubscriptionMail(
 // 	[
 // 		{
-// 			name: "Krishnaraj",
-// 			email: "johndoe@example",
+// 			customer_name: "Krishnaraj",
+// 			customer_email: "johndoe@example",
 // 		},
 // 		{
-// 			name: "Jane Doe",
-// 			email: "1032210888@mitwpu.edu.in",
+// 			customer_name: "Jane Doe",
+// 			customer_email: "1032210888@mitwpu.edu.in",
 // 		},
 // 		{
-// 			name: "Parth Zarekar",
-// 			email: "parthzarekar@gmail.com",
+// 			customer_name: "Parth Zarekar",
+// 			customer_email: "parthzarekar@gmail.com",
 // 		},
 // 		{
-// 			name: "Krishnaraj Thadesar",
-// 			email: "thadesarkrishnaraj@gmail.com",
+// 			customer_name: "Krishnaraj Thadesar",
+// 			customer_email: "thadesarkrishnaraj@gmail.com",
 // 		},
 // 	],
 // 	"Test Subject",
