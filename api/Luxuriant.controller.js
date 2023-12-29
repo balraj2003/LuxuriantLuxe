@@ -1,5 +1,5 @@
 // Import necessary modules and initialize DAO
-import sendMail from "../send_mail.js";
+import { sendMail, sendSubscriptionMail } from "../send_mail.js";
 import LuxuriantDAO from "../dao/LuxuriantDAO.js";
 import dotenv from "dotenv";
 dotenv.config();
@@ -177,12 +177,12 @@ export default class LuxuriantController {
 	static async apiSendSubscriptionEmails(req, res, next) {
 		try {
 			const pass = req.body.password;
-			const customer_emails = req.body.customers;
+			const customer_details = req.body.customer_details;
 			const subject = req.body.subject;
 			const content = req.body.content;
 
 			if (pass === master_password) {
-				const mail = await sendMail(customer_emails, subject, content);
+				const mail = await sendSubscriptionMail(customer_details, subject, content);
 				if (mail) {
 					res.json({ message: "Success" });
 				} else {
