@@ -128,34 +128,34 @@ export { sendMail, sendSubscriptionMail };
 
 // test code
 
-sendMail(
-	{
-		email: "kpt.krishnaraj@gmail.com",
-		name: "Krishnaraj",
-	},
-	[
-		{
-			product_id: "60a4f0e1b9b4a4b4f8e4e6e3",
-			quantity: 2,
-			price: 100,
-		},
-		{
-			product_id: "60a4f0e1b9b4a4b4f8e4adsfae6e3",
-			quantity: 3,
-			price: 400,
-		},
-	],
-	[
-		{
-			_id: "60a4f0e1b9b4a4b4f8e4e6e3",
-			product_name: "Test Product",
-		},
-		{
-			_id: "60a4f0e1b9b4a4b4f8e4adsfae6e3",
-			product_name: "Test Product 2",
-		},
-	]
-);
+// sendMail(
+// 	{
+// 		email: "kpt.krishnaraj@gmail.com",
+// 		name: "Krishnaraj",
+// 	},
+// 	[
+// 		{
+// 			product_id: "60a4f0e1b9b4a4b4f8e4e6e3",
+// 			quantity: 2,
+// 			price: 100,
+// 		},
+// 		{
+// 			product_id: "60a4f0e1b9b4a4b4f8e4adsfae6e3",
+// 			quantity: 3,
+// 			price: 400,
+// 		},
+// 	],
+// 	[
+// 		{
+// 			_id: "60a4f0e1b9b4a4b4f8e4e6e3",
+// 			product_name: "Test Product",
+// 		},
+// 		{
+// 			_id: "60a4f0e1b9b4a4b4f8e4adsfae6e3",
+// 			product_name: "Test Product 2",
+// 		},
+// 	]
+// );
 
 // sendSubscriptionMail(
 // 	[
