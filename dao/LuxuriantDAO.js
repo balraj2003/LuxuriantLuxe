@@ -125,6 +125,14 @@ export default class LuxuriantDAO {
     return result;
   }
 
+  // Method to get order from id
+  async getOrder(order_id) {
+    const result = await cluster0
+      .collection("orders")
+      .findOne({ _id: new ObjectId(order_id) });
+    return result;
+  }
+
   // Method to change the payment status of an order
   async changePaymentStatus(order_id, payment_status) {
     const result = await cluster0

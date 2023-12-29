@@ -26,7 +26,6 @@ router.route("/change_payment_status").post(LuxuriantCtrl.apiChangePaymentStatus
 // Route for sending batch subscription emails
 router.route("/send_subscription_emails").post(LuxuriantCtrl.apiSendSubscriptionEmails);
 
-
 // Route for checking password
 router.route("/check_password").post(LuxuriantCtrl.apiCheckPassword);
 

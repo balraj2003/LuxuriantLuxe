@@ -142,22 +142,22 @@ export default class LuxuriantController {
 			const pass = req.body.password;
 			const order_id = req.body.order_id;
 			const payment_status = req.body.payment_status;
-
+			const order = await dao.getOrder(order_id);
 			if (pass === master_password) {
-				const order = await dao.changePaymentStatus(
-					order_id,
-					payment_status
-				);
 				const customer = await dao.getCustomerEmail(order.customer_id);
 				const product = await dao.getProducts();
 
 				if (order) {
 					const mail = await sendMail(
 						customer,
-						order.order_details,
+						order,
 						product
 					);
 					if (mail) {
+						await dao.changePaymentStatus(
+							order_id,
+							payment_status
+						);
 						res.json({ order: order, message: "Success" });
 					} else {
 						res.json({ message: "Failure" });
@@ -177,12 +177,16 @@ export default class LuxuriantController {
 	static async apiSendSubscriptionEmails(req, res, next) {
 		try {
 			const pass = req.body.password;
-			const customer_details = req.body.customer_details;
+			const customer_details = req.body.customers;
 			const subject = req.body.subject;
 			const content = req.body.content;
 
 			if (pass === master_password) {
-				const mail = await sendSubscriptionMail(customer_details, subject, content);
+				const mail = await sendSubscriptionMail(
+					customer_details,
+					subject,
+					content
+				);
 				if (mail) {
 					res.json({ message: "Success" });
 				} else {

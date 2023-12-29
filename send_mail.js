@@ -14,7 +14,7 @@ async function sendMail(customer, order, product) {
 	console.log(product);
 	// Constructing the orderDetails string
 	let starting_text = `
-		<h1>Thank you for shopping with us, ${customer.name}!</h1>
+		<h1>Thank you for shopping with us, ${customer.customer_name}!</h1>
 		<br>
 		The Order you placed at ${order.order_date} ${order.order_time} has been successfully placed, and is being processed. <br>
 		It will be delivered to your provided address: ${customer.customer_address}, Shortly. <br>
@@ -22,7 +22,7 @@ async function sendMail(customer, order, product) {
 		<br>
 	`;
 	let orderDetails = "";
-	for (let item of order) {
+	for (let item of order.order_details) {
 		let productItem = product.find(
 			(p) => p._id.toString() === item.product_id.toString()
 		);
