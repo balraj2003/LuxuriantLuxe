@@ -1,11 +1,10 @@
-import Mailjet from "node-mailjet";
 import dotenv from "dotenv";
 dotenv.config();
 
-const publicKey = process.env.mailjet_public_key;
-const privateKey = process.env.mailjet_private_key;
-
-const mj = Mailjet.connect(publicKey, privateKey);
+const mailjet = require("node-mailjet").connect(
+	process.env.mailjet_public_key,
+	process.env.mailjet_private_key
+);
 
 async function sendMail(customer, order, product) {
 	// Constructing the orderDetails string
@@ -20,58 +19,69 @@ async function sendMail(customer, order, product) {
 		orderDetails += `Product name: ${productName}<br>Quantity: ${item.quantity}<br>Price: ${item.price}<br><br>`;
 	}
 
-	const request = await mj.post("send", { version: "v3.1" }).request({
-		Messages: [
-			{
-				From: {
-					Email: "balrajriotavanandi@outlook.com",
-					Name: "Luxuriant Luxe Team",
-				},
-				To: [
-					{
-						Email: customer.customer_email,
-						Name: customer.customer_name, // Assuming customer has a name property
-					},
-				],
-				Subject: "Order Details",
-				TextPart: "Order Details",
-				HTMLPart: orderDetails,
-			},
-		],
+	const request = mailjet.post("send").request({
+		FromEmail: process.env.Mail_Usr,
+		FromName: "Luxuriant Luxe Team",
+		Subject: "Your Order has been placed!",
+		"Text-part": "Your Order Details are given below. ",
+		"Html-part": orderDetails,
+		Recipients: [{ Email: customer.email, Name: customer.name }],
 	});
 
-	const success = request.body.Messages.every(
-		(message) => message.Status === "success"
-	);
+	const success = request
+		.then((result) => {
+			console.log(result.body);
+			return true;
+		})
+		.catch((err) => {
+			console.log(err.statusCode);
+			return false;
+		});
+	// log
 	console.log(success);
 	return success;
 }
 
 export default sendMail;
 
-async function sendSubscriptionMail(customer_mail_ids, subject, content) {
-	const request = await mj.post("send", { version: "v3.1" }).request({
-		Messages: [
-			{
-				From: {
-					Email: "balrajriotavanandi@outlook.com",
-					Name: "Luxuriant Luxe Team",
-				},
-				To: [
-					{
-						Email: customer_mail_id,
-						Name: "Customer",
-					},
-				],
-				Subject: subject,
-				TextPart: content,
-				HTMLPart: content,
-			},
-		],
+async function sendSubscriptionMail(customer_details, subject, content) {
+	// customer details looks like this:
+	// [
+	// 	{
+	// 		name: "John Doe",
+	// 		email: "johndoe@example",
+	// 	},
+	// 	{
+	// 		name: "Jane Doe",
+	// 		email: "janedoe@example",
+	// 	},
+	// ];
+	let recipients = [];
+	for (let customer of customer_details) {
+		recipients.push({
+			Email: customer.email,
+			Name: customer.name,
+		});
+	}
+
+	const request = mailjet.post("send").request({
+		FromEmail: process.env.Mail_Usr,
+		FromName: "Luxuriant Luxe Team",
+		Subject: subject,
+		"Text-part": content,
+		"Html-part": content,
+		Recipients: recipients,
 	});
-	const success = request.body.Messages.every(
-		(message) => message.Status === "success"
-	);
+
+	const success = request
+		.then((result) => {
+			console.log(result.body);
+			return true;
+		})
+		.catch((err) => {
+			console.log(err.statusCode);
+			return false;
+		});
 	console.log(success);
 	return success;
 }
