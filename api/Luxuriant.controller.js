@@ -240,7 +240,6 @@ export default class LuxuriantController {
 		}
 	}
 
-
 	// Method to add products
 	static apiAddProductsLuxuriant(req, res, next) {
 		// get password from body
@@ -281,21 +280,63 @@ export default class LuxuriantController {
 			const pass = req.body.password;
 			if (pass === master_password) {
 				// Update the product using the DAO
-				const product = await dao.updateProduct(
-					req.body.product_id,
-					req.body.product_details
-				);
-
-				// Send a JSON response with the product details if the product was updated successfully
-				if (product) {
-					res.json({
-						product_details: product,
-						message: "Product updated successfully",
+				dao.updateProduct(req.body.product_id, req.body.product_details)
+					.then((product) => {
+						// Send a JSON response with the product details if the product was updated successfully
+						console.log(product);
+						if (product) {
+							res.json({
+								product_details: product,
+								message: "Product updated successfully",
+							});
+						} else {
+							// Send a JSON response with an error message if the product was not updated successfully
+							res.json({
+								message: "Failure in updating product",
+							});
+						}
+					})
+					.catch((e) => {
+						// Send a 500 status code and the error message if an error occurs
+						res.status(500).json({ error: e.message });
 					});
-				} else {
-					// Send a JSON response with an error message if the product was not updated successfully
-					res.json({ message: "Failure in updating product" });
-				}
+			} else {
+				// Send a JSON response with a failure message if the password is incorrect
+				res.json({ message: "Incorrect password" });
+			}
+		} catch (e) {
+			// Send a 500 status code and the error message if an error occurs
+			res.status(500).json({ error: e.message });
+		}
+	}
+
+	// Method to update multiple products
+	static async apiUpdateMultipleProducts(req, res, next) {
+		try {
+			// Check if the provided password matches the master password
+			const pass = req.body.password;
+			if (pass === master_password) {
+				// console.log(req.body.product_details);
+				// Update the product using the DAO
+				dao.updateMultipleProducts(req.body.product_details)
+					.then((result) => {
+						console.log(result)
+						// Send a JSON response with the product details if the product was updated successfully
+						if (result) {
+							res.json({
+								message: "success",
+							});
+						} else {
+							// Send a JSON response with an error message if the product was not updated successfully
+							res.json({
+								message: "failure",
+							});
+						}
+					})
+					.catch((e) => {
+						// Send a 500 status code and the error message if an error occurs
+						res.status(500).json({ error: e.message });
+					});
 			} else {
 				// Send a JSON response with a failure message if the password is incorrect
 				res.json({ message: "Incorrect password" });

@@ -203,4 +203,54 @@ export default class LuxuriantDAO {
 			);
 		return result;
 	}
+
+	// Method to update mulitple products
+	async updateMultipleProducts(product_details) {
+		// product_details is a list of these objects:
+		// {
+		//   "_id": "654cd992ae6a271afeed6b4c",
+		//   "product_name": "Product Name 3",
+		//   "product_cost": 100,
+		//   "product_image_links": [
+		//       "image1",
+		//       "image2"
+		//   ],
+		//   "product_category": [
+		//       "Product Category",
+		//       "Product Category 2"
+		//   ],
+		//   "product_quantity": 100,
+		//   "product_description": "Product Description"
+		// }
+		// Iterate through the list of product details, and update all of them
+
+		let error_occured = false;
+		// console.log(product_details);
+		for (let i = 0; i < product_details.length; i++) {
+			// exclude id from product_details[i]
+			const { _id, ...rest } = product_details[i];
+			await cluster0
+				.collection("products")
+				.findOneAndUpdate(
+					{ _id: new ObjectId(product_details[i]._id) },
+					{ $set: rest },
+					{ returnOriginal: false }
+				)
+				.then((result) => {
+					// Handle success
+					console.log("updated product: " + result._id);
+				})
+				.catch((error) => {
+					error_occured = true;
+					// Handle error
+					console.log(error);
+				});
+		}
+
+		if (error_occured) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 }

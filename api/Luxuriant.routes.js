@@ -21,10 +21,14 @@ router.route("/get_products").post(LuxuriantCtrl.apiGetProducts);
 router.route("/get_orders").post(LuxuriantCtrl.apiGetOrders);
 
 // Route for changing payment status
-router.route("/change_payment_status").post(LuxuriantCtrl.apiChangePaymentStatus);
+router
+	.route("/change_payment_status")
+	.post(LuxuriantCtrl.apiChangePaymentStatus);
 
 // Route for sending batch subscription emails
-router.route("/send_subscription_emails").post(LuxuriantCtrl.apiSendSubscriptionEmails);
+router
+	.route("/send_subscription_emails")
+	.post(LuxuriantCtrl.apiSendSubscriptionEmails);
 
 // Route for checking password
 router.route("/check_password").post(LuxuriantCtrl.apiCheckPassword);
@@ -37,6 +41,11 @@ router.route("/delete_product").post(LuxuriantCtrl.apiDeleteProduct);
 
 // Route for updating a product
 router.route("/update_product").post(LuxuriantCtrl.apiUpdateProduct);
+
+// Route for updating multiple products
+router
+	.route("/update_multiple_products")
+	.post(LuxuriantCtrl.apiUpdateMultipleProducts);
 
 // Exporting the router as a module
 export default router;
