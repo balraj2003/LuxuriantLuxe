@@ -34,7 +34,7 @@ router
 router.route("/check_password").post(LuxuriantCtrl.apiCheckPassword);
 
 // Route for adding a product
-router.route("/add_product").get(LuxuriantCtrl.apiAddProductsLuxuriant);
+router.route("/add_product").post(LuxuriantCtrl.apiAddProductsLuxuriant);
 
 // Route for deleting a product
 router.route("/delete_product").post(LuxuriantCtrl.apiDeleteProduct);

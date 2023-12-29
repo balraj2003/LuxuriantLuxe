@@ -241,7 +241,8 @@ export default class LuxuriantController {
 	}
 
 	// Method to add products
-	static apiAddProductsLuxuriant(req, res, next) {
+	static async apiAddProductsLuxuriant(req, res, next) {
+		// console.log(req.body)
 		// get password from body
 		const pass = req.body.password;
 		// get product details from body
@@ -256,11 +257,11 @@ export default class LuxuriantController {
 					if (product) {
 						res.json({
 							product_details: product,
-							message: "Product added successfully",
+							message: "success",
 						});
 					} else {
 						// Send a JSON response with an error message if the product was not added successfully
-						res.json({ message: "Failure in adding product" });
+						res.json({ message: "failure" });
 					}
 				})
 				.catch((e) => {
