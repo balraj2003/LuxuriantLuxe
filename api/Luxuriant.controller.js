@@ -148,16 +148,9 @@ export default class LuxuriantController {
 				const product = await dao.getProducts();
 
 				if (order) {
-					const mail = await sendMail(
-						customer,
-						order,
-						product
-					);
+					const mail = await sendMail(customer, order, product);
 					if (mail) {
-						await dao.changePaymentStatus(
-							order_id,
-							payment_status
-						);
+						await dao.changePaymentStatus(order_id, payment_status);
 						res.json({ order: order, message: "Success" });
 					} else {
 						res.json({ message: "Failure" });
@@ -218,23 +211,94 @@ export default class LuxuriantController {
 		}
 	}
 
-	// Method to add products
-	static async apiAddProductsLuxuriant(req, res, next) {
+	// Method to delete product
+	static async apiDeleteProduct(req, res, next) {
 		try {
-			// Add a product using the DAO
-			const product = await dao.addProduct();
+			// Check if the provided password matches the master password
+			const pass = req.body.password;
+			if (pass === master_password) {
+				// Delete the product using the DAO
+				const product = await dao.deleteProduct(req.body.product_id);
 
-			// Send a JSON response with the product details if the product was added successfully
-			if (product) {
-				res.json({
-					product_id: product.product_id,
-					product_name: product.product_name,
-					product_cost: product.product_cost,
-					message: "Product added successfully",
-				});
+				// Send a JSON response with the product details if the product was deleted successfully
+				if (product) {
+					res.json({
+						product_details: product,
+						message: "Product deleted successfully",
+					});
+				} else {
+					// Send a JSON response with an error message if the product was not deleted successfully
+					res.json({ message: "Failure in deleting product" });
+				}
 			} else {
-				// Send a JSON response with an error message if the product was not added successfully
-				res.json({ message: "Failure in adding product" });
+				// Send a JSON response with a failure message if the password is incorrect
+				res.json({ message: "Incorrect password" });
+			}
+		} catch (e) {
+			// Send a 500 status code and the error message if an error occurs
+			res.status(500).json({ error: e.message });
+		}
+	}
+
+
+	// Method to add products
+	static apiAddProductsLuxuriant(req, res, next) {
+		// get password from body
+		const pass = req.body.password;
+		// get product details from body
+		const new_product_details = req.body.product_details;
+
+		// Check if the provided password matches the master password
+		if (pass === master_password) {
+			// Add a product using the DAO
+			dao.addProduct(new_product_details)
+				.then((product) => {
+					// Send a JSON response with the product details if the product was added successfully
+					if (product) {
+						res.json({
+							product_details: product,
+							message: "Product added successfully",
+						});
+					} else {
+						// Send a JSON response with an error message if the product was not added successfully
+						res.json({ message: "Failure in adding product" });
+					}
+				})
+				.catch((e) => {
+					// Send a 500 status code and the error message if an error occurs
+					res.status(500).json({ error: e.message });
+				});
+		} else {
+			// Send a JSON response with a failure message if the password is incorrect
+			res.json({ message: "Incorrect password" });
+		}
+	}
+
+	// Method to update product
+	static async apiUpdateProduct(req, res, next) {
+		try {
+			// Check if the provided password matches the master password
+			const pass = req.body.password;
+			if (pass === master_password) {
+				// Update the product using the DAO
+				const product = await dao.updateProduct(
+					req.body.product_id,
+					req.body.product_details
+				);
+
+				// Send a JSON response with the product details if the product was updated successfully
+				if (product) {
+					res.json({
+						product_details: product,
+						message: "Product updated successfully",
+					});
+				} else {
+					// Send a JSON response with an error message if the product was not updated successfully
+					res.json({ message: "Failure in updating product" });
+				}
+			} else {
+				// Send a JSON response with a failure message if the password is incorrect
+				res.json({ message: "Incorrect password" });
 			}
 		} catch (e) {
 			// Send a 500 status code and the error message if an error occurs
