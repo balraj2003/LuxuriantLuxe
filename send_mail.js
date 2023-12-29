@@ -1,10 +1,11 @@
 import dotenv from "dotenv";
+import Mailjet from "node-mailjet";
+
 dotenv.config();
 
-const mailjet = require("node-mailjet").connect(
-	process.env.mailjet_public_key,
-	process.env.mailjet_private_key
-);
+const publicKey = process.env.mailjet_public_key;
+const privateKey = process.env.mailjet_private_key;
+const mailjet = Mailjet.connect(publicKey, privateKey);
 
 async function sendMail(customer, order, product) {
 	// Constructing the orderDetails string
@@ -85,3 +86,31 @@ async function sendSubscriptionMail(customer_details, subject, content) {
 	console.log(success);
 	return success;
 }
+
+
+// test code
+
+// sendMail(
+// 	{
+// 		email: "kpt.krishnaraj@gmail.com",
+// 		name: "Krishnaraj",
+// 	},
+// 	[
+// 		{
+// 			product_id: "60a4f0e1b9b4a4b4f8e4e6e3",
+// 			quantity: 1,
+// 			price: 100,
+// 		},
+// 		{
+// 			product_id: "60a4f0e1b9b4a4b4f8e4e6e3",
+// 			quantity: 1,
+// 			price: 100,
+// 		},
+// 	],
+// 	[
+// 		{
+// 			_id: "60a4f0e1b9b4a4b4f8e4e6e3",
+// 			product_name: "Test Product",
+// 		},
+// 	]
+// );
