@@ -47,6 +47,19 @@ async function sendMail(customer, order, product) {
 						${orderDetails}
 					</tbody>
 				</table>`;
+	// ending text
+	orderDetails += `
+		<br>
+		For further support or queries, please contact us at
+		<a href="mailto:
+			${process.env.Support_Email}
+		">${process.env.Support_Email}</a>
+		<br>
+		or call us at
+		<a href="tel:
+			${process.env.Mail_Phone}
+		">${process.env.Mail_Phone}</a>
+		<br>`;
 	const request = mailjet.post("send").request({
 		FromEmail: process.env.Mail_Usr,
 		FromName: "Luxuriant Luxe Team",
@@ -152,9 +165,17 @@ sendMail(
 // 		},
 // 		{
 // 			name: "Jane Doe",
-// 			email: "janedoe@example",
+// 			email: "1032210888@mitwpu.edu.in",
+// 		},
+// 		{
+// 			name: "Parth Zarekar",
+// 			email: "parthzarekar@gmail.com",
+// 		},
+// 		{
+// 			name: "Krishnaraj Thadesar",
+// 			email: "thadesarkrishnaraj@gmail.com",
 // 		},
 // 	],
 // 	"Test Subject",
-// 	"Test Content"
+// 	"<h1>Test Content</h1>"
 // );
