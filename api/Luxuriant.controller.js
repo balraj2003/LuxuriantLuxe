@@ -224,11 +224,11 @@ export default class LuxuriantController {
 				if (product) {
 					res.json({
 						product_details: product,
-						message: "Product deleted successfully",
+						message: "success",
 					});
 				} else {
 					// Send a JSON response with an error message if the product was not deleted successfully
-					res.json({ message: "Failure in deleting product" });
+					res.json({ message: "failure" });
 				}
 			} else {
 				// Send a JSON response with a failure message if the password is incorrect
