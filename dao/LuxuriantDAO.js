@@ -31,7 +31,9 @@ export default class LuxuriantDAO {
 		customer_address,
 		customer_name,
 		customer_order,
-		order_cost
+		updated_customer_points,
+		order_cost,
+		points_used
 	) {
 		// Check if the customer already exists
 		let customer = await cluster0
@@ -53,6 +55,7 @@ export default class LuxuriantDAO {
 								customer_phone: customer_phone,
 								customer_address: customer_address,
 								customer_name: customer_name,
+								customer_points: updated_customer_points,
 							},
 						},
 						{ returnOriginal: false }
@@ -65,6 +68,7 @@ export default class LuxuriantDAO {
 				customer_address,
 				customer_email,
 				customer_phone,
+				customer_points: updated_customer_points,
 			});
 			customer = { _id: result.insertedId };
 		}
@@ -77,6 +81,7 @@ export default class LuxuriantDAO {
 			order_date: moment().tz("Asia/Kolkata").format("DD/MM/YY"),
 			order_time: moment().tz("Asia/Kolkata").format("HH:mm:ss"),
 			order_cost,
+			points_used,
 			payment_status: "pending",
 			customer_id: customer._id,
 			order_details: customer_order.map((product) => ({
@@ -252,5 +257,36 @@ export default class LuxuriantDAO {
 		} else {
 			return true;
 		}
+	}
+
+	// Method to delete an order
+	async deleteOrder(order_id) {
+		const result = await cluster0
+			.collection("orders")
+			.deleteOne({ _id: new ObjectId(order_id) });
+		return result;
+	}
+
+	// Method to delete a customer
+	async deleteCustomer(customer_id) {
+		const result = await cluster0
+			.collection("customers")
+			.deleteOne({ _id: new ObjectId(customer_id) });
+		return result;
+	}
+
+	// Method to get customer points
+	async getCustomerPoints(customer_id) {
+		const result = await cluster0
+			.collection("customers")
+			.findOne({ _id: new ObjectId(customer_id) });
+		// if no customer points found, set them to 0, and return 0
+		if (!result) {
+			await cluster0
+				.collection("customers")
+				.insertOne({ customer_points: 0 });
+			return 0;
+		}
+		return result;
 	}
 }

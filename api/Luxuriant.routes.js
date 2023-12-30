@@ -14,6 +14,12 @@ router.route("/add_order").post(LuxuriantCtrl.apiAddOrdersLuxuriant);
 // Route for getting customers
 router.route("/get_customers").post(LuxuriantCtrl.apiGetCustomers);
 
+// Route for Getting customer points
+router.route("/get_customer_points").post(LuxuriantCtrl.apiGetCustomerPoints);
+
+// Route for Deleting a customer
+router.route("/delete_customer").post(LuxuriantCtrl.apiDeleteCustomer);
+
 // Route for getting products
 router.route("/get_products").post(LuxuriantCtrl.apiGetProducts);
 
@@ -41,6 +47,9 @@ router.route("/delete_product").post(LuxuriantCtrl.apiDeleteProduct);
 
 // Route for updating a product
 router.route("/update_product").post(LuxuriantCtrl.apiUpdateProduct);
+
+// Route for deleting order
+router.route("/delete_order").post(LuxuriantCtrl.apiDeleteOrder);
 
 // Route for updating multiple products
 router

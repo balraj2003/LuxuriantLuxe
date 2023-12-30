@@ -29,6 +29,8 @@ export default class LuxuriantController {
 			const customer_name = req.query.customer_name;
 			const customer_order = req.query.customer_order;
 			const order_cost = req.query.order_cost;
+			const points_used = req.query.points_used;
+			const updated_customer_points = req.query.updated_customer_points;
 
 			// Add the order using the DAO
 			const order = await dao.addOrder(
@@ -37,7 +39,9 @@ export default class LuxuriantController {
 				customer_address,
 				customer_name,
 				customer_order,
-				order_cost
+				updated_customer_points,
+				order_cost,
+				points_used
 			);
 
 			// Send a JSON response with the order details if the order was added successfully
@@ -58,6 +62,37 @@ export default class LuxuriantController {
 		}
 	}
 
+	// Method to get customer points
+	static async apiGetCustomerPoints(req, res, next) {
+		try {
+			// Check if the provided password matches the master password
+			const pass = req.body.password;
+			if (pass === master_password) {
+				// Get the customer points using the DAO
+				const customer_points = await dao.getCustomerPoints(
+					req.body.customer_id
+				);
+
+				// Send a JSON response with the customer points if they were found
+				if (customer_points) {
+					res.json({
+						customer_points: customer_points,
+						message: "success",
+					});
+				} else {
+					// Send a JSON response with an error message if no customer points were found
+					res.json({ message: "failure" });
+				}
+			} else {
+				// Send a JSON response with an error message if the password is incorrect
+				res.json({ message: "Incorrect password" });
+			}
+		} catch (e) {
+			// Send a 500 status code and the error message if an error occurs
+			res.status(500).json({ error: e.message });
+		}
+	}
+	
 	// Method to get customers
 	static async apiGetCustomers(req, res, next) {
 		try {
@@ -76,6 +111,35 @@ export default class LuxuriantController {
 				}
 			} else {
 				// Send a JSON response with an error message if the password is incorrect
+				res.json({ message: "Incorrect password" });
+			}
+		} catch (e) {
+			// Send a 500 status code and the error message if an error occurs
+			res.status(500).json({ error: e.message });
+		}
+	}
+
+	// Method to delete customer
+	static async apiDeleteCustomer(req, res, next) {
+		try {
+			// Check if the provided password matches the master password
+			const pass = req.body.password;
+			if (pass === master_password) {
+				// Delete the customer using the DAO
+				const customer = await dao.deleteCustomer(req.body.customer_id);
+
+				// Send a JSON response with the customer details if the customer was deleted successfully
+				if (customer) {
+					res.json({
+						customer_details: customer,
+						message: "success",
+					});
+				} else {
+					// Send a JSON response with an error message if the customer was not deleted successfully
+					res.json({ message: "failure" });
+				}
+			} else {
+				// Send a JSON response with a failure message if the password is incorrect
 				res.json({ message: "Incorrect password" });
 			}
 		} catch (e) {
@@ -321,7 +385,7 @@ export default class LuxuriantController {
 				// Update the product using the DAO
 				dao.updateMultipleProducts(req.body.product_details)
 					.then((result) => {
-						console.log(result)
+						console.log(result);
 						// Send a JSON response with the product details if the product was updated successfully
 						if (result) {
 							res.json({
@@ -338,6 +402,35 @@ export default class LuxuriantController {
 						// Send a 500 status code and the error message if an error occurs
 						res.status(500).json({ error: e.message });
 					});
+			} else {
+				// Send a JSON response with a failure message if the password is incorrect
+				res.json({ message: "Incorrect password" });
+			}
+		} catch (e) {
+			// Send a 500 status code and the error message if an error occurs
+			res.status(500).json({ error: e.message });
+		}
+	}
+
+	// Method to delete order
+	static async apiDeleteOrder(req, res, next) {
+		try {
+			// Check if the provided password matches the master password
+			const pass = req.body.password;
+			if (pass === master_password) {
+				// Delete the order using the DAO
+				const order = await dao.deleteOrder(req.body.order_id);
+
+				// Send a JSON response with the order details if the order was deleted successfully
+				if (order) {
+					res.json({
+						order_details: order,
+						message: "success",
+					});
+				} else {
+					// Send a JSON response with an error message if the order was not deleted successfully
+					res.json({ message: "failure" });
+				}
 			} else {
 				// Send a JSON response with a failure message if the password is incorrect
 				res.json({ message: "Incorrect password" });
