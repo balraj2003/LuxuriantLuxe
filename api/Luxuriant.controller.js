@@ -655,4 +655,31 @@ export default class LuxuriantController {
 			res.status(500).json({ error: e.message });
 		}
 	}
+
+	// Method to get all categories
+	static async apiGetCategories(req, res, next) {
+		try {
+			// Check if the provided password matches the master password
+			const pass = req.body.password;
+			if (pass === master_password) {
+				// Get the categories using the DAO
+				const categories = await dao.getCategories();
+
+				// Send a JSON response with the categories if they were found
+				if (categories) {
+					res.json({ categories: categories, message: "Success" });
+				} else {
+					// Send a JSON response with an error message if no categories were found
+					res.json({ message: "No categories found" });
+				}
+			} else {
+				// Send a JSON response with an error message if the password is incorrect
+				res.json({ message: "Incorrect password" });
+			}
+		} catch (e) {
+			console.error(e);
+			// Send a 500 status code and the error message if an error occurs
+			res.status(500).json({ error: e.message });
+		}
+	}
 }
