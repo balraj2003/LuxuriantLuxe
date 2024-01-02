@@ -321,4 +321,41 @@ export default class LuxuriantDAO {
 			);
 		return result;
 	}
+
+	// Method to add a category
+	async addCategory(category_details) {
+		const result = await cluster0
+			.collection("categories")
+			.insertOne(category_details);
+		return result;
+	}
+
+	// Method to delete a category
+	async deleteCategory(category_id) {
+		const result = await cluster0
+			.collection("categories")
+			.deleteOne({ _id: new ObjectId(category_id) });
+		return result;
+	}
+
+	// Method to get all categories
+	async getCategories() {
+		const result = await cluster0
+			.collection("categories")
+			.find({})
+			.toArray();
+		return result;
+	}
+
+	// Method to update a category
+	async updateCategory(category_id, category_details) {
+		const result = await cluster0
+			.collection("categories")
+			.findOneAndUpdate(
+				{ _id: new ObjectId(category_id) },
+				{ $set: category_details },
+				{ returnOriginal: false }
+			);
+		return result;
+	}
 }

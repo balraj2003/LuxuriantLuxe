@@ -467,7 +467,7 @@ export default class LuxuriantController {
 			res.status(500).json({ error: e.message });
 		}
 	}
-	
+
 	// Method to add faq
 	static async apiAddFaq(req, res, next) {
 		try {
@@ -549,6 +549,100 @@ export default class LuxuriantController {
 					});
 				} else {
 					// Send a JSON response with an error message if the faq was not updated successfully
+					res.json({ message: "failure" });
+				}
+			} else {
+				// Send a JSON response with a failure message if the password is incorrect
+				res.json({ message: "Incorrect password" });
+			}
+		} catch (e) {
+			console.error(e);
+			// Send a 500 status code and the error message if an error occurs
+			res.status(500).json({ error: e.message });
+		}
+	}
+
+	// Method to add category
+	static async apiAddCategory(req, res, next) {
+		try {
+			// Check if the provided password matches the master password
+			const pass = req.body.password;
+			const category = req.body.category;
+			if (pass === master_password) {
+				// Add the category using the DAO
+				const result = await dao.addCategory(category);
+
+				// Send a JSON response with the category details if the category was added successfully
+				if (result) {
+					res.json({
+						category_details: result,
+						message: "success",
+					});
+				} else {
+					// Send a JSON response with an error message if the category was not added successfully
+					res.json({ message: "failure" });
+				}
+			} else {
+				// Send a JSON response with a failure message if the password is incorrect
+				res.json({ message: "Incorrect password" });
+			}
+		} catch (e) {
+			console.error(e);
+			// Send a 500 status code and the error message if an error occurs
+			res.status(500).json({ error: e.message });
+		}
+	}
+
+	// Method to delete category
+	static async apiDeleteCategory(req, res, next) {
+		try {
+			// Check if the provided password matches the master password
+			const pass = req.body.password;
+			const category_id = req.body.category_id;
+			if (pass === master_password) {
+				// Delete the category using the DAO
+				const category = await dao.deleteCategory(category_id);
+
+				// Send a JSON response with the category details if the category was deleted successfully
+				if (category) {
+					res.json({
+						category_details: category,
+						message: "success",
+					});
+				} else {
+					// Send a JSON response with an error message if the category was not deleted successfully
+					res.json({ message: "failure" });
+				}
+			} else {
+				// Send a JSON response with a failure message if the password is incorrect
+				res.json({ message: "Incorrect password" });
+			}
+		} catch (e) {
+			console.error(e);
+			// Send a 500 status code and the error message if an error occurs
+			res.status(500).json({ error: e.message });
+		}
+	}
+
+	// Method to update category
+	static async apiUpdateCategory(req, res, next) {
+		try {
+			// Check if the provided password matches the master password
+			const pass = req.body.password;
+			const category_id = req.body.category_id;
+			const category = req.body.category;
+			if (pass === master_password) {
+				// Update the category using the DAO
+				const result = await dao.updateCategory(category_id, category);
+
+				// Send a JSON response with the category details if the category was updated successfully
+				if (result) {
+					res.json({
+						category_details: result,
+						message: "success",
+					});
+				} else {
+					// Send a JSON response with an error message if the category was not updated successfully
 					res.json({ message: "failure" });
 				}
 			} else {
