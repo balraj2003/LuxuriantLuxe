@@ -92,7 +92,7 @@ export default class LuxuriantController {
 			res.status(500).json({ error: e.message });
 		}
 	}
-	
+
 	// Method to get customers
 	static async apiGetCustomers(req, res, next) {
 		try {
@@ -436,6 +436,127 @@ export default class LuxuriantController {
 				res.json({ message: "Incorrect password" });
 			}
 		} catch (e) {
+			// Send a 500 status code and the error message if an error occurs
+			res.status(500).json({ error: e.message });
+		}
+	}
+
+	// Method to get all faqs
+	static async apiGetFaqs(req, res, next) {
+		try {
+			// Check if the provided password matches the master password
+			const pass = req.body.password;
+			if (pass === master_password) {
+				// Get the faqs using the DAO
+				const faqs = await dao.getFaqs();
+
+				// Send a JSON response with the faqs if they were found
+				if (faqs) {
+					res.json({ faqs: faqs, message: "Success" });
+				} else {
+					// Send a JSON response with an error message if no faqs were found
+					res.json({ message: "No faqs found" });
+				}
+			} else {
+				// Send a JSON response with an error message if the password is incorrect
+				res.json({ message: "Incorrect password" });
+			}
+		} catch (e) {
+			// Send a 500 status code and the error message if an error occurs
+			console.error(e);
+			res.status(500).json({ error: e.message });
+		}
+	}
+	
+	// Method to add faq
+	static async apiAddFaq(req, res, next) {
+		try {
+			// Check if the provided password matches the master password
+			const pass = req.body.password;
+			const faq = req.body.faq;
+			if (pass === master_password) {
+				// Add the faq using the DAO
+				const result = await dao.addFaq(faq);
+
+				// Send a JSON response with the faq details if the faq was added successfully
+				if (result) {
+					res.json({
+						faq_details: result,
+						message: "success",
+					});
+				} else {
+					// Send a JSON response with an error message if the faq was not added successfully
+					res.json({ message: "failure" });
+				}
+			} else {
+				// Send a JSON response with a failure message if the password is incorrect
+				res.json({ message: "Incorrect password" });
+			}
+		} catch (e) {
+			console.error(e);
+			// Send a 500 status code and the error message if an error occurs
+			res.status(500).json({ error: e.message });
+		}
+	}
+
+	// Method to delete faq
+	static async apiDeleteFaq(req, res, next) {
+		try {
+			// Check if the provided password matches the master password
+			const pass = req.body.password;
+			const faq_id = req.body.faq_id;
+			if (pass === master_password) {
+				// Delete the faq using the DAO
+				const faq = await dao.deleteFaq(faq_id);
+
+				// Send a JSON response with the faq details if the faq was deleted successfully
+				if (faq) {
+					res.json({
+						faq_details: faq,
+						message: "success",
+					});
+				} else {
+					// Send a JSON response with an error message if the faq was not deleted successfully
+					res.json({ message: "failure" });
+				}
+			} else {
+				// Send a JSON response with a failure message if the password is incorrect
+				res.json({ message: "Incorrect password" });
+			}
+		} catch (e) {
+			console.error(e);
+			// Send a 500 status code and the error message if an error occurs
+			res.status(500).json({ error: e.message });
+		}
+	}
+
+	// Method to update faq
+	static async apiUpdateFaq(req, res, next) {
+		try {
+			// Check if the provided password matches the master password
+			const pass = req.body.password;
+			const faq_id = req.body.faq_id;
+			const faq = req.body.faq;
+			if (pass === master_password) {
+				// Update the faq using the DAO
+				const result = await dao.updateFaq(faq_id, faq);
+
+				// Send a JSON response with the faq details if the faq was updated successfully
+				if (result) {
+					res.json({
+						faq_details: result,
+						message: "success",
+					});
+				} else {
+					// Send a JSON response with an error message if the faq was not updated successfully
+					res.json({ message: "failure" });
+				}
+			} else {
+				// Send a JSON response with a failure message if the password is incorrect
+				res.json({ message: "Incorrect password" });
+			}
+		} catch (e) {
+			console.error(e);
 			// Send a 500 status code and the error message if an error occurs
 			res.status(500).json({ error: e.message });
 		}

@@ -51,6 +51,18 @@ router.route("/update_product").post(LuxuriantCtrl.apiUpdateProduct);
 // Route for deleting order
 router.route("/delete_order").post(LuxuriantCtrl.apiDeleteOrder);
 
+// Route for getting all faqs
+router.route("/get_faqs").post(LuxuriantCtrl.apiGetFaqs);
+
+// Route for adding a faq
+router.route("/add_faq").post(LuxuriantCtrl.apiAddFaq);
+
+// Route for deleting a faq
+router.route("/delete_faq").post(LuxuriantCtrl.apiDeleteFaq);
+
+// Route for updating a faq
+router.route("/update_faq").post(LuxuriantCtrl.apiUpdateFaq);
+
 // Route for updating multiple products
 router
 	.route("/update_multiple_products")

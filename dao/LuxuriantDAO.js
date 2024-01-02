@@ -289,4 +289,36 @@ export default class LuxuriantDAO {
 		}
 		return result;
 	}
+
+	// Method to get faqs
+	async getFaqs() {
+		const result = await cluster0.collection("faqs").find({}).toArray();
+		return result;
+	}
+
+	// Method to add a faq
+	async addFaq(faq_details) {
+		const result = await cluster0.collection("faqs").insertOne(faq_details);
+		return result;
+	}
+
+	// Method to delete a faq
+	async deleteFaq(faq_id) {
+		const result = await cluster0
+			.collection("faqs")
+			.deleteOne({ _id: new ObjectId(faq_id) });
+		return result;
+	}
+
+	// Method to update a faq
+	async updateFaq(faq_id, faq_details) {
+		const result = await cluster0
+			.collection("faqs")
+			.findOneAndUpdate(
+				{ _id: new ObjectId(faq_id) },
+				{ $set: faq_details },
+				{ returnOriginal: false }
+			);
+		return result;
+	}
 }
