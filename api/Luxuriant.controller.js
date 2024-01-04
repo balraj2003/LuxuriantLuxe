@@ -62,6 +62,37 @@ export default class LuxuriantController {
 		}
 	}
 
+	// Method to add customer
+	static async apiAddCustomer(req, res, next) {
+		try {
+			// Extract customer details from the request query
+			const customer_details = req.body.customer_details;
+
+			// Add the customer using the DAO
+			await dao
+				.addCustomer(customer_details)
+				.then((customer) => {
+					// Send a JSON response with the customer details if the customer was added successfully
+					if (customer) {
+						res.json({
+							customer_details: customer,
+							message: "success",
+						});
+					} else {
+						// Send a JSON response with an error message if the customer was not added successfully
+						res.json({ message: "failure" });
+					}
+				})
+				.catch((e) => {
+					// Send a 500 status code and the error message if an error occurs
+					res.status(500).json({ error: e.message });
+				});
+		} catch (e) {
+			// Send a 500 status code and the error message if an error occurs
+			res.status(500).json({ error: e.message });
+		}
+	}
+
 	// Method to get customer points
 	static async apiGetCustomerPoints(req, res, next) {
 		try {
@@ -659,22 +690,45 @@ export default class LuxuriantController {
 	// Method to get all categories
 	static async apiGetCategories(req, res, next) {
 		try {
-			// Check if the provided password matches the master password
-			const pass = req.body.password;
-			if (pass === master_password) {
-				// Get the categories using the DAO
-				const categories = await dao.getCategories();
+			// // Check if the provided password matches the master password
+			// const pass = req.body.password;
+			// if (pass === master_password) {
+			// Get the categories using the DAO
+			const categories = await dao.getCategories();
 
-				// Send a JSON response with the categories if they were found
-				if (categories) {
-					res.json({ categories: categories, message: "Success" });
-				} else {
-					// Send a JSON response with an error message if no categories were found
-					res.json({ message: "No categories found" });
-				}
+			// Send a JSON response with the categories if they were found
+			if (categories) {
+				res.json({ categories: categories, message: "Success" });
 			} else {
-				// Send a JSON response with an error message if the password is incorrect
-				res.json({ message: "Incorrect password" });
+				// Send a JSON response with an error message if no categories were found
+				res.json({ message: "No categories found" });
+			}
+			// } else {
+			// Send a JSON response with an error message if the password is incorrect
+			// res.json({ message: "Incorrect password" });
+			// }
+		} catch (e) {
+			console.error(e);
+			// Send a 500 status code and the error message if an error occurs
+			res.status(500).json({ error: e.message });
+		}
+	}
+
+	// Method to Add review to a product
+	static async apiAddReview(req, res, next) {
+		try {
+			// Get the categories using the DAO
+			const reviews = await dao.addReview(
+				req.body.product_id,
+				req.body.reviews
+			);
+
+			// Send a JSON response with the categories if they were found
+			if (reviews) {
+				res.json({ reviews: reviews, message: "Success" });
+			} else {
+				// Send a JSON response with an error message if no categories were found
+				res.json({ message: "No review found" });
 			}
 		} catch (e) {
 			console.error(e);

@@ -127,6 +127,14 @@ export default class LuxuriantDAO {
 		return result;
 	}
 
+	// Method to Add customer
+	async addCustomer(customer_details) {
+		const result = await cluster0
+			.collection("customers")
+			.insertOne(customer_details);
+		return result;
+	}
+
 	// Method to get all orders
 	async getOrders() {
 		const result = await cluster0.collection("orders").find({}).toArray();
@@ -354,6 +362,18 @@ export default class LuxuriantDAO {
 			.findOneAndUpdate(
 				{ _id: new ObjectId(category_id) },
 				{ $set: category_details },
+				{ returnOriginal: false }
+			);
+		return result;
+	}
+
+	// Method to Add review to a product given its product id and review object.
+	async addReview(product_id, reviews) {
+		const result = await cluster0
+			.collection("products")
+			.findOneAndUpdate(
+				{ _id: new ObjectId(product_id) },
+				{ $set: { product_reviews: reviews } },
 				{ returnOriginal: false }
 			);
 		return result;

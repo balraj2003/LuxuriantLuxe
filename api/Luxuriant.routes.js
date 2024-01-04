@@ -11,6 +11,9 @@ router.route("/").get(LuxuriantCtrl.apiGetLuxuriant);
 // Route for adding an order
 router.route("/add_order").post(LuxuriantCtrl.apiAddOrdersLuxuriant);
 
+// Route for adding a customer
+router.route("/add_customer").post(LuxuriantCtrl.apiAddCustomer);
+
 // Route for getting customers
 router.route("/get_customers").post(LuxuriantCtrl.apiGetCustomers);
 
@@ -74,6 +77,9 @@ router.route("/update_category").post(LuxuriantCtrl.apiUpdateCategory);
 
 // Route for getting all categories
 router.route("/get_categories").post(LuxuriantCtrl.apiGetCategories);
+
+// Route for adding a review to a product
+router.route("/add_review").post(LuxuriantCtrl.apiAddReview);
 
 // Route for updating multiple products
 router
