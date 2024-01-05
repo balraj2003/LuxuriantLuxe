@@ -476,22 +476,22 @@ export default class LuxuriantController {
 	static async apiGetFaqs(req, res, next) {
 		try {
 			// Check if the provided password matches the master password
-			const pass = req.body.password;
-			if (pass === master_password) {
-				// Get the faqs using the DAO
-				const faqs = await dao.getFaqs();
+			// const pass = req.body.password;
+			// if (pass === master_password) {
+			// Get the faqs using the DAO
+			const faqs = await dao.getFaqs();
 
-				// Send a JSON response with the faqs if they were found
-				if (faqs) {
-					res.json({ faqs: faqs, message: "Success" });
-				} else {
-					// Send a JSON response with an error message if no faqs were found
-					res.json({ message: "No faqs found" });
-				}
+			// Send a JSON response with the faqs if they were found
+			if (faqs) {
+				res.json({ faqs: faqs, message: "Success" });
 			} else {
-				// Send a JSON response with an error message if the password is incorrect
-				res.json({ message: "Incorrect password" });
+				// Send a JSON response with an error message if no faqs were found
+				res.json({ message: "No faqs found" });
 			}
+			// } else {
+			// Send a JSON response with an error message if the password is incorrect
+			// res.json({ message: "Incorrect password" });
+			// }
 		} catch (e) {
 			// Send a 500 status code and the error message if an error occurs
 			console.error(e);
