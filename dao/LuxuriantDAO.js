@@ -42,6 +42,7 @@ export default class LuxuriantDAO {
 			.findOne({ customer_email });
 		//also check if the customer exists and has the same information if not then update the customer information
 		if (customer) {
+			console.log("the customer for this order already exists", customer)
 			if (
 				customer.customer_phone !== customer_phone ||
 				customer.customer_address !== customer_address ||
@@ -50,7 +51,7 @@ export default class LuxuriantDAO {
 				const result = await cluster0
 					.collection("customers")
 					.findOneAndUpdate(
-						{ customer_email },
+						{ customer_email: customer_email },
 						{
 							$set: {
 								customer_phone: customer_phone,
@@ -78,24 +79,24 @@ export default class LuxuriantDAO {
 		// Parse the order
 		customer_order = JSON.parse(customer_order);
 
-		console.log("customerId: " + customer._id);
 		// Create the order object
 		const order = {
 			order_date: moment().tz("Asia/Kolkata").format("DD/MM/YY"),
 			order_time: moment().tz("Asia/Kolkata").format("HH:mm:ss"),
 			order_cost,
 			points_used,
+			customer_name: customer_name,
 			payment_status: "pending",
 			customer_id: customer._id,
 			order_details: customer_order.map((product) => ({
-				product_id: new ObjectId(product.product_id),
-				quantity: product.quantity,
+				product_id: product._id,
+				quantity: product.selected_quantity,
 				selectedVolume: product.selected_volume,
 				selectedShade: product.selected_shade,
-				price: product.cost,
+				price: product.product_cost,
 			})),
 		};
-
+		console.log("inserting order, ", order)
 		// Add the order to the database
 		const orderResult = await cluster0
 			.collection("orders")
@@ -104,7 +105,7 @@ export default class LuxuriantDAO {
 		if (orderResult) {
 			// If the order was inserted successfully, return the order details
 			return {
-				order_id: orderResult.insertedId,
+				order_id: orderResult,
 				order_cost: order_cost,
 				payment_status: "pending",
 				message: "Success",
@@ -256,7 +257,7 @@ export default class LuxuriantDAO {
 				)
 				.then((result) => {
 					// Handle success
-					console.log("updated product: " + result._id);
+					// console.log("updated product: " + result._id);
 				})
 				.catch((error) => {
 					error_occured = true;

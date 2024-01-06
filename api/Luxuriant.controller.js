@@ -32,7 +32,7 @@ export default class LuxuriantController {
 			const points_used = req.query.points_used;
 			const wantsSubscription = req.query.wantsSubscription;
 			const updated_customer_points = req.query.updated_customer_points;
-
+			console.log('in controller rn')
 			console.log(req.query)
 
 			// Add the order using the DAO
@@ -80,7 +80,7 @@ export default class LuxuriantController {
 			//also check if the customer exists and has the same information if not then update the customer information
 			if (customer) {
 				await dao
-					.addCustomer(customer_email, customer_details)
+					.updateCustomer(customer_email, customer_details)
 					.then((customer) => {
 						// Send a JSON response with the customer details if the customer was added successfully
 						if (customer) {
@@ -133,11 +133,15 @@ export default class LuxuriantController {
 			// Check if the provided password matches the master password
 			// Get the customer points using the DAO
 			const customers = await dao.getCustomers();
-			const customer_points = customers.filter(
+			const customer = customers.filter(
 				(customer) =>
-					customer.customer_email === req.body.customer_email
-			)[0]?.customer_points;
-			console.log(customer_points);
+					customer.customer_email === req.body.data.customer_email
+			)[0];
+			const customer_points = customer?.customer_points;
+			// console.log("requested to get customer points", req.body)
+			// console.log("customer", customer)
+			// console.log("customer points" )
+			// console.log(customer_points);
 			// Send a JSON response with the customer points if they were found
 			if (customer_points) {
 				res.json({
@@ -416,7 +420,7 @@ export default class LuxuriantController {
 				dao.updateProduct(req.body.product_id, req.body.product_details)
 					.then((product) => {
 						// Send a JSON response with the product details if the product was updated successfully
-						console.log(product);
+						// console.log(product);
 						if (product) {
 							res.json({
 								product_details: product,
@@ -453,7 +457,7 @@ export default class LuxuriantController {
 				// Update the product using the DAO
 				dao.updateMultipleProducts(req.body.product_details)
 					.then((result) => {
-						console.log(result);
+						// console.log(result);
 						// Send a JSON response with the product details if the product was updated successfully
 						if (result) {
 							res.json({
