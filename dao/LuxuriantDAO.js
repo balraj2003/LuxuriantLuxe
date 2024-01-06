@@ -33,7 +33,8 @@ export default class LuxuriantDAO {
 		customer_order,
 		updated_customer_points,
 		order_cost,
-		points_used
+		points_used,
+		wantsSubscription
 	) {
 		// Check if the customer already exists
 		let customer = await cluster0
@@ -56,6 +57,7 @@ export default class LuxuriantDAO {
 								customer_address: customer_address,
 								customer_name: customer_name,
 								customer_points: updated_customer_points,
+								wantsSubscription: wantsSubscription,
 							},
 						},
 						{ returnOriginal: false }
@@ -69,6 +71,7 @@ export default class LuxuriantDAO {
 				customer_email,
 				customer_phone,
 				customer_points: updated_customer_points,
+				wantsSubscription: wantsSubscription,
 			});
 			customer = { _id: result.insertedId };
 		}
@@ -87,6 +90,8 @@ export default class LuxuriantDAO {
 			order_details: customer_order.map((product) => ({
 				product_id: new ObjectId(product.product_id),
 				quantity: product.quantity,
+				selectedVolume: product.selected_volume,
+				selectedShade: product.selected_shade,
 				price: product.cost,
 			})),
 		};
@@ -376,6 +381,25 @@ export default class LuxuriantDAO {
 				{ $set: { product_reviews: reviews } },
 				{ returnOriginal: false }
 			);
+		return result;
+	}
+
+	// method to update customers
+	async updateCustomer(customer_email, customer_details) {
+		const result = await cluster0
+			.collection("customers")
+			.findOneAndUpdate(
+				{ customer_email: customer_email },
+				{ $set: customer_details },
+				{ returnOriginal: false }
+			);
+		return result;
+	}
+
+	async getCustomerFromEmail(customer_email) {
+		const result = await cluster0
+			.collection("customers")
+			.findOne({ customer_email: customer_email });
 		return result;
 	}
 }

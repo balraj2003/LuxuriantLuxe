@@ -30,6 +30,7 @@ export default class LuxuriantController {
 			const customer_order = req.query.customer_order;
 			const order_cost = req.query.order_cost;
 			const points_used = req.query.points_used;
+			const wantsSubscription = req.query.wantsSubscription;
 			const updated_customer_points = req.query.updated_customer_points;
 
 			// Add the order using the DAO
@@ -41,7 +42,8 @@ export default class LuxuriantController {
 				customer_order,
 				updated_customer_points,
 				order_cost,
-				points_used
+				points_used,
+				wantsSubscription
 			);
 
 			// Send a JSON response with the order details if the order was added successfully
@@ -67,27 +69,57 @@ export default class LuxuriantController {
 		try {
 			// Extract customer details from the request query
 			const customer_details = req.body.customer_details;
-
-			// Add the customer using the DAO
-			await dao
-				.addCustomer(customer_details)
-				.then((customer) => {
-					// Send a JSON response with the customer details if the customer was added successfully
-					if (customer) {
-						res.json({
-							customer_details: customer,
-							message: "success",
-						});
-					} else {
-						// Send a JSON response with an error message if the customer was not added successfully
-						res.json({ message: "failure" });
-					}
-				})
-				.catch((e) => {
-					// Send a 500 status code and the error message if an error occurs
-					res.status(500).json({ error: e.message });
-				});
+			const customer_email = req.body.customer_details.customer_email;
+			const wantsSubscription =
+				req.body.customer_details.wantsSubscription;
+			console.log(req.body.customer_details);
+			// Check if the customer already exists
+			let customer = await dao.getCustomerFromEmail(customer_email);
+			//also check if the customer exists and has the same information if not then update the customer information
+			if (customer) {
+				await dao
+					.addCustomer(customer_email, customer_details)
+					.then((customer) => {
+						// Send a JSON response with the customer details if the customer was added successfully
+						if (customer) {
+							res.json({
+								customer_details: customer,
+								message: "success",
+							});
+						} else {
+							// Send a JSON response with an error message if the customer was not added successfully
+							res.json({ message: "failure" });
+						}
+					})
+					.catch((e) => {
+						// Send a 500 status code and the error message if an error occurs
+						console.log("in updating cus add", e);
+						res.status(500).json({ error: e.message });
+					});
+			} else {
+				// Add the customer using the DAO
+				await dao
+					.addCustomer(customer_details)
+					.then((customer) => {
+						// Send a JSON response with the customer details if the customer was added successfully
+						if (customer) {
+							res.json({
+								customer_details: customer,
+								message: "success",
+							});
+						} else {
+							// Send a JSON response with an error message if the customer was not added successfully
+							res.json({ message: "failure" });
+						}
+					})
+					.catch((e) => {
+						// Send a 500 status code and the error message if an error occurs
+						console.log("in new cus add", e);
+						res.status(500).json({ error: e.message });
+					});
+			}
 		} catch (e) {
+			console.log("final", e);
 			// Send a 500 status code and the error message if an error occurs
 			res.status(500).json({ error: e.message });
 		}
@@ -97,27 +129,30 @@ export default class LuxuriantController {
 	static async apiGetCustomerPoints(req, res, next) {
 		try {
 			// Check if the provided password matches the master password
-			const pass = req.body.password;
-			if (pass === master_password) {
-				// Get the customer points using the DAO
-				const customer_points = await dao.getCustomerPoints(
-					req.body.customer_id
-				);
-
-				// Send a JSON response with the customer points if they were found
-				if (customer_points) {
-					res.json({
-						customer_points: customer_points,
-						message: "success",
-					});
-				} else {
-					// Send a JSON response with an error message if no customer points were found
-					res.json({ message: "failure" });
-				}
+			// Get the customer points using the DAO
+			const customers = await dao.getCustomers();
+			const customer_points = customers.filter(
+				(customer) =>
+					customer.customer_email === req.body.customer_email
+			)[0]?.customer_points;
+			console.log(customer_points);
+			// Send a JSON response with the customer points if they were found
+			if (customer_points) {
+				res.json({
+					customer_points: customer_points,
+					message: "success",
+				});
 			} else {
-				// Send a JSON response with an error message if the password is incorrect
-				res.json({ message: "Incorrect password" });
+				// Send a JSON response with an error message if no customer points were found
+				res.json({
+					customer_points: 0,
+					message: "success",
+				});
 			}
+			// } else {
+			// 	// Send a JSON response with an error message if the password is incorrect
+			// 	res.json({ message: "Incorrect password" });
+			// }
 		} catch (e) {
 			// Send a 500 status code and the error message if an error occurs
 			res.status(500).json({ error: e.message });
