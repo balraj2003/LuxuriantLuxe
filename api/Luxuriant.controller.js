@@ -33,6 +33,8 @@ export default class LuxuriantController {
 			const wantsSubscription = req.query.wantsSubscription;
 			const updated_customer_points = req.query.updated_customer_points;
 
+			console.log(req.query)
+
 			// Add the order using the DAO
 			const order = await dao.addOrder(
 				customer_email,
