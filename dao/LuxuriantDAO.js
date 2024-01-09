@@ -42,7 +42,7 @@ export default class LuxuriantDAO {
 			.findOne({ customer_email });
 		//also check if the customer exists and has the same information if not then update the customer information
 		if (customer) {
-			console.log("the customer for this order already exists", customer)
+			console.log("the customer for this order already exists", customer);
 			if (
 				customer.customer_phone !== customer_phone ||
 				customer.customer_address !== customer_address ||
@@ -96,7 +96,7 @@ export default class LuxuriantDAO {
 				price: product.product_cost,
 			})),
 		};
-		console.log("inserting order, ", order)
+		console.log("inserting order, ", order);
 		// Add the order to the database
 		const orderResult = await cluster0
 			.collection("orders")
@@ -401,6 +401,37 @@ export default class LuxuriantDAO {
 		const result = await cluster0
 			.collection("customers")
 			.findOne({ customer_email: customer_email });
+		return result;
+	}
+
+	async getStaticStuff() {
+		const result = await cluster0.collection("static").find({}).toArray();
+		return result;
+	}
+
+	async updateStaticStuff(id, static_details) {
+		const result = await cluster0
+			.collection("static")
+			.findOneAndUpdate(
+				{ _id: new ObjectId(id) },
+				{ $set: static_details },
+				{ returnOriginal: false }
+			);
+		return result;
+	}
+
+	async addStaticStuff(static_details) {
+		console.log("adding static stuff, here it is", static_details);
+		const result = await cluster0
+			.collection("static")
+			.insertOne(static_details);
+		return result;
+	}
+
+	async deleteStaticStuff(static_id) {
+		const result = await cluster0
+			.collection("static")
+			.deleteOne({ _id: new ObjectId(static_id) });
 		return result;
 	}
 }

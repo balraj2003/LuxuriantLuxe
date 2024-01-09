@@ -32,8 +32,8 @@ export default class LuxuriantController {
 			const points_used = req.query.points_used;
 			const wantsSubscription = req.query.wantsSubscription;
 			const updated_customer_points = req.query.updated_customer_points;
-			console.log('in controller rn')
-			console.log(req.query)
+			console.log("in controller rn");
+			console.log(req.query);
 
 			// Add the order using the DAO
 			const order = await dao.addOrder(
@@ -228,10 +228,15 @@ export default class LuxuriantController {
 			// if (pass === master_password) {
 			// Get the products using the DAO
 			const products = await dao.getProducts();
+			const static_stuff = await dao.getStaticStuff();
 
 			// Send a JSON response with the products if they were found
 			if (products) {
-				res.json({ products: products, message: "Success" });
+				res.json({
+					products: products,
+					static_stuff: static_stuff,
+					message: "Success",
+				});
 			} else {
 				// Send a JSON response with an error message if no products were found
 				res.json({ message: "No products found" });
@@ -774,6 +779,84 @@ export default class LuxuriantController {
 		} catch (e) {
 			console.error(e);
 			// Send a 500 status code and the error message if an error occurs
+			res.status(500).json({ error: e.message });
+		}
+	}
+
+	static async apiUpdateStaticStuff(req, res, next) {
+		try {
+			const pass = req.body.password;
+			if (pass === master_password) {
+				const static_stuff = req.body.static_stuff;
+				const static_id = req.body.static_id;
+				const result = await dao.updateStaticStuff(
+					static_id,
+					static_stuff
+				);
+				if (result) {
+					res.json({ message: "success" });
+				} else {
+					res.json({ message: "failure" });
+				}
+			} else {
+				res.json({ message: "Incorrect password" });
+			}
+		} catch (e) {
+			console.error(e);
+			res.status(500).json({ error: e.message });
+		}
+	}
+
+	static async apiAddStaticStuff(req, res, next) {
+		try {
+			const pass = req.body.password;
+			if (pass === master_password) {
+				const static_stuff = req.body.static_stuff;
+				const result = await dao.addStaticStuff(static_stuff);
+				if (result) {
+					res.json({ message: "success" });
+				} else {
+					res.json({ message: "failure" });
+				}
+			} else {
+				res.json({ message: "Incorrect password" });
+			}
+		} catch (e) {
+			console.error(e);
+			res.status(500).json({ error: e.message });
+		}
+	}
+
+	static async apiGetStaticStuff(req, res, next) {
+		try {
+			const static_stuff = await dao.getStaticStuff();
+			if (static_stuff) {
+				res.json({ static_stuff: static_stuff, message: "success" });
+			} else {
+				res.json({ message: "failure" });
+			}
+		} catch (e) {
+			console.error(e);
+			res.status(500).json({ error: e.message });
+		}
+	}
+
+	static async apiDeleteStaticStuff(req, res, next) {
+		try {
+			const pass = req.body.password;
+			if (pass === master_password) {
+				const static_id = req.body.static_id;
+				const result = await dao.deleteStaticStuff(static_id);
+				if (result) {
+					res.json({ message: "success" });
+				} else {
+					res.json({ message: "failure" });
+				}
+			} else {
+				res.json({ message: "Incorrect password" });
+			}
+		} catch (e) {
+			console.error(e);
 			res.status(500).json({ error: e.message });
 		}
 	}

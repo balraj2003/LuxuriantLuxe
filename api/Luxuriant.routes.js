@@ -81,6 +81,18 @@ router.route("/get_categories").post(LuxuriantCtrl.apiGetCategories);
 // Route for adding a review to a product
 router.route("/add_review").post(LuxuriantCtrl.apiAddReview);
 
+// Route for deleting a review
+router.route("/update_static_stuff").post(LuxuriantCtrl.apiUpdateStaticStuff);
+
+// Route for adding a review to a product
+router.route("/add_static_stuff").post(LuxuriantCtrl.apiAddStaticStuff);
+
+// Route for deleting a review
+router.route("/delete_static_stuff").post(LuxuriantCtrl.apiDeleteStaticStuff);
+
+// Route for getting static stuff
+router.route("/get_static_stuff").post(LuxuriantCtrl.apiGetStaticStuff);
+
 // Route for updating multiple products
 router
 	.route("/update_multiple_products")
